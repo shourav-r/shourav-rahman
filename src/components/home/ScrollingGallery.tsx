@@ -9,9 +9,11 @@ import { supabase } from '@/lib/supabase/client'
 interface GalleryItem {
   id: number
   title: string
-  category: string
+  category?: string
+  categories?: string[]
   image_url: string
   created_at: string
+  gallery_item_categories?: Array<{ category_name: string }>
 }
 
 export default function ScrollingGallery() {
@@ -24,41 +26,47 @@ export default function ScrollingGallery() {
   useEffect(() => {
     const fetchGalleryItems = async () => {
       try {
-        // Get all items first
-        const { data: allItems, error: itemsError } = await supabase
+        // Get all gallery items with their categories
+        const { data: galleryItems, error } = await supabase
           .from('gallery_items')
-          .select('category')
+          .select(`
+            *,
+            gallery_item_categories (
+              category_name
+            )
+          `)
+          .order('created_at', { ascending: false })
 
-        if (itemsError) {
-          console.error('Error fetching items:', itemsError)
+        if (error) {
+          console.error('Error fetching gallery items:', error)
           return
         }
 
-        // Get unique categories
-        const uniqueCategories = [...new Set(allItems?.map(item => item.category))]
-
-        // For each category, get the latest item
-        const latestItems = await Promise.all(
-          uniqueCategories.map(async (category) => {
-            const { data, error } = await supabase
-              .from('gallery_items')
-              .select('*')
-              .eq('category', category)
-              .order('created_at', { ascending: true })
-              .limit(1)
-              .single()
-
-            if (error) {
-              console.error(`Error fetching item for category ${category}:`, error)
-              return null
+        // Process items to get latest item per category
+        const categoryMap = new Map()
+        
+        galleryItems?.forEach((item: GalleryItem) => {
+          // Get all categories for this item
+          const categories = item.gallery_item_categories?.map((cat: { category_name: string }) => cat.category_name) || 
+                           (item.category ? [item.category] : ['Uncategorized'])
+          
+          // For each category, keep track of the latest item
+          categories.forEach((category: string) => {
+            const existingItem = categoryMap.get(category)
+            if (!existingItem || 
+                new Date(item.created_at) > new Date(existingItem.created_at)) {
+              categoryMap.set(category, {
+                ...item,
+                // Store all categories for this item
+                categories: categories
+              })
             }
-
-            return data
           })
-        )
+        })
 
-        // Filter out any null values and set the items
-        setGalleryItems(latestItems.filter((item): item is GalleryItem => item !== null))
+        // Convert map values to array
+        const latestItems = Array.from(categoryMap.values())
+        setGalleryItems(latestItems)
       } catch (error) {
         console.error('Error:', error)
       } finally {
@@ -145,7 +153,7 @@ export default function ScrollingGallery() {
               transition={{ duration: 0.3 }}
             >
               <Link 
-                href={`/gallery?category=${encodeURIComponent(item.category)}`}
+                href={`/gallery?category=${encodeURIComponent(item.categories?.[0] || item.category || '')}`}
                 className="block relative aspect-square w-[calc(50vw-24px)] sm:h-[300px] sm:w-[240px] md:h-[400px] md:w-[300px] overflow-hidden rounded-xl cursor-pointer"
               >
                 <Image

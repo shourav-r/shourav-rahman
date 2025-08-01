@@ -9,11 +9,14 @@ import { supabase } from '@/lib/supabase/client'
 interface GalleryItem {
   id: number
   title: string
-  category: string
+  category?: string
+  categories?: string[]
   image_url: string
+  gallery_item_categories?: Array<{ category_name: string }>
+  created_at: string
 }
 
-const categories = ['All', 'Painting', 'Drawing', 'Mixed media', 'Illustration', 'Watercolor', 'Animation', '3D', 'Product design', 'Video editing']
+const categories = ['All', 'Painting', 'Drawing', 'Mixed media', 'Illustration', 'Watercolor', '3D', 'Product design']
 
 // Function to transform image URLs to the correct format
 const transformImageUrl = (url: string) => {
@@ -83,7 +86,12 @@ export default function AlternatingGallery() {
       try {
         const { data: items, error } = await supabase
           .from('gallery_items')
-          .select('*')
+          .select(`
+            *,
+            gallery_item_categories (
+              category_name
+            )
+          `)
           .order('created_at', { ascending: false })
         
         if (error) {
@@ -92,7 +100,14 @@ export default function AlternatingGallery() {
           return
         }
         
-        setGalleryItems(items || [])
+        // Process items to include categories
+        const processedItems = items?.map(item => ({
+          ...item,
+          categories: item.gallery_item_categories?.map((cat: { category_name: string }) => cat.category_name) || 
+                     (item.category ? [item.category] : ['Uncategorized'])
+        })) || [];
+        
+        setGalleryItems(processedItems)
       } catch (error) {
         console.error('Error fetching gallery items:', error)
         setGalleryItems([])
@@ -109,9 +124,12 @@ export default function AlternatingGallery() {
     }
   }, [categoryFromUrl])
 
-  const filteredItems = galleryItems.filter(item =>
-    selectedCategory.toLowerCase() === 'all' ? true : item.category.toLowerCase() === selectedCategory.toLowerCase()
-  )
+  const filteredItems = selectedCategory === 'All' 
+    ? galleryItems 
+    : galleryItems.filter(item => 
+        (item.categories && item.categories.includes(selectedCategory)) || 
+        item.category === selectedCategory
+      )
 
   return (
     <>
