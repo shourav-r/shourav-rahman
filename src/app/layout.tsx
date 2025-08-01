@@ -19,13 +19,13 @@ export const metadata: Metadata = {
   title: "Shourav's Portfolio",
   description: 'Professional portfolio showcasing my work and skills.',
   icons: {
-    icon: '/favicon.ico',
-    shortcut: '/favicon.ico',
-    apple: '/favicon.ico',
-    other: {
-      rel: 'icon',
-      url: '/favicon.ico',
-    },
+    icon: [
+      { url: '/favicon.png', type: 'image/png' },
+      { url: '/favicon.ico', type: 'image/x-icon', sizes: 'any' },
+    ],
+    apple: [
+      { url: '/favicon.png', type: 'image/png' },
+    ],
   },
   openGraph: {
     title: "Shourav's Portfolio",

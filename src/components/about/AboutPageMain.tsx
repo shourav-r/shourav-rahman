@@ -41,16 +41,44 @@ export default function AboutPage() {
           <div className="flex flex-col md:flex-row gap-8 md:gap-12 items-center mb-16 md:mb-24">
             {/* Image Section */}
             <motion.div 
-              className="relative h-[250px] w-[250px] sm:h-[350px] sm:w-[350px] md:h-[400px] md:w-[400px] mx-auto rounded-full overflow-hidden shadow-2xl ring-2 md:ring-4 ring-primary/30"
+              className="relative aspect-square w-[250px] sm:w-[350px] md:w-[400px] mx-auto rounded-full overflow-hidden shadow-2xl ring-2 md:ring-4 ring-primary/30 flex-shrink-0"
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
+              style={{
+                width: 'min(100%, 400px)',
+                height: 'auto'
+              }}
             >
               <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-transparent z-10 rounded-full" />
-              <div className="w-full h-full bg-gradient-to-br from-primary/30 to-primary/10 rounded-full flex items-center justify-center">
-                <div className="text-4xl sm:text-5xl md:text-6xl font-bold text-primary/60">
-                  SR
+              <div className="w-full h-full bg-gradient-to-br from-primary/30 to-primary/10 rounded-full flex items-center justify-center relative">
+                {/* Fallback content - hidden by default, shown only if image fails to load */}
+                <div className="absolute inset-0 flex items-center justify-center" id="initials-fallback">
+                  <div className="text-4xl sm:text-5xl md:text-6xl font-bold text-primary/60">
+                    SR
+                  </div>
                 </div>
+                {/* Profile image */}
+                <Image
+                  src="/profile.png"
+                  alt="Profile Picture"
+                  width={400}
+                  height={400}
+                  className="object-cover object-center w-full h-full"
+                  onLoad={(e) => {
+                    // Hide initials when image loads successfully
+                    const initials = document.getElementById('initials-fallback');
+                    if (initials) initials.style.display = 'none';
+                  }}
+                  onError={(e) => {
+                    // Show initials if image fails to load
+                    const target = e.target as HTMLImageElement;
+                    target.style.display = 'none';
+                    const initials = document.getElementById('initials-fallback');
+                    if (initials) initials.style.display = 'flex';
+                  }}
+                  priority
+                />
               </div>
             </motion.div>
 
