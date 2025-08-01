@@ -9,11 +9,9 @@ import { supabase } from '@/lib/supabase/client'
 interface GalleryItem {
   id: number
   title: string
-  category?: string
-  categories?: string[]
+  category: string
   image_url: string
   created_at: string
-  gallery_item_categories?: Array<{ category_name: string }>
 }
 
 export default function ScrollingGallery() {
@@ -29,12 +27,7 @@ export default function ScrollingGallery() {
         // Get all gallery items with their categories
         const { data: galleryItems, error } = await supabase
           .from('gallery_items')
-          .select(`
-            *,
-            gallery_item_categories (
-              category_name
-            )
-          `)
+          .select('*')
           .order('created_at', { ascending: false })
 
         if (error) {
@@ -42,13 +35,18 @@ export default function ScrollingGallery() {
           return
         }
 
+        console.log('Fetched gallery items:', galleryItems)
+
         // Process items to get latest item per category
         const categoryMap = new Map()
         
         galleryItems?.forEach((item: GalleryItem) => {
-          // Get all categories for this item
-          const categories = item.gallery_item_categories?.map((cat: { category_name: string }) => cat.category_name) || 
-                           (item.category ? [item.category] : ['Uncategorized'])
+          console.log('Processing item:', item.id, 'with URL:', item.image_url)
+          // Get all categories for this item (split by comma and trim)
+          const categories = (item.category || 'Uncategorized')
+            .split(',')
+            .map(cat => cat.trim())
+            .filter(Boolean);
           
           // For each category, keep track of the latest item
           categories.forEach((category: string) => {
@@ -153,17 +151,29 @@ export default function ScrollingGallery() {
               transition={{ duration: 0.3 }}
             >
               <Link 
-                href={`/gallery?category=${encodeURIComponent(item.categories?.[0] || item.category || '')}`}
+                href={`/gallery?category=${encodeURIComponent(item.category.split(',')[0]?.trim() || '')}`}
                 className="block relative aspect-square w-[calc(50vw-24px)] sm:h-[300px] sm:w-[240px] md:h-[400px] md:w-[300px] overflow-hidden rounded-xl cursor-pointer"
               >
-                <Image
-                  src={item.image_url}
-                  alt={item.title}
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 640px) 240px, 300px"
-                  priority={index < 3} // Only prioritize first 3 images for better LCP
-                />
+                <div className="relative w-full h-full">
+                  <Image
+                    src={item.image_url}
+                    alt={item.title || 'Gallery image'}
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 640px) 240px, 300px"
+                    priority={index < 3} // Only prioritize first 3 images for better LCP
+                    onError={(e) => {
+                      console.error('Error loading image:', item.image_url, e);
+                      const target = e.target as HTMLImageElement;
+                      target.style.display = 'none';
+                    }}
+                  />
+                  {!item.image_url && (
+                    <div className="absolute inset-0 bg-gray-200 flex items-center justify-center">
+                      <span className="text-gray-500">Image not available</span>
+                    </div>
+                  )}
+                </div>
                 <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4">
                   <p className="text-white/80 text-base md:text-lg font-medium capitalize">{item.category}</p>
                   <p className="text-white/60 text-xs md:text-sm mt-1">View Gallery →</p>

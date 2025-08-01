@@ -9,10 +9,8 @@ import { supabase } from '@/lib/supabase/client'
 interface GalleryItem {
   id: number
   title: string
-  category?: string
-  categories?: string[]
+  category: string
   image_url: string
-  gallery_item_categories?: Array<{ category_name: string }>
   created_at: string
 }
 
@@ -52,13 +50,25 @@ const ImagePopup = ({ item, onClose }: ImagePopupProps) => {
           onClick={(e) => e.stopPropagation()}
           className="relative w-full max-w-4xl aspect-[4/3] rounded-xl overflow-hidden"
         >
-          <Image
-            src={transformImageUrl(item.image_url)}
-            alt={item.title}
-            fill
-            className="object-cover"
-            sizes="(max-width: 1024px) 100vw, 1024px"
-          />
+          <div className="relative w-full h-full">
+            <Image
+              src={transformImageUrl(item.image_url)}
+              alt={item.title || 'Gallery image'}
+              fill
+              className="object-cover"
+              sizes="(max-width: 1024px) 100vw, 1024px"
+              onError={(e) => {
+                console.error('Error loading image in popup:', item.image_url, e);
+                const target = e.target as HTMLImageElement;
+                target.style.display = 'none';
+              }}
+            />
+            {!item.image_url && (
+              <div className="absolute inset-0 bg-gray-200 flex items-center justify-center">
+                <span className="text-gray-500">Image not available</span>
+              </div>
+            )}
+          </div>
           <button
             onClick={onClose}
             className="absolute top-4 right-4 text-white bg-black/50 rounded-full p-2 hover:bg-black/70 transition-colors"
@@ -86,12 +96,7 @@ export default function AlternatingGallery() {
       try {
         const { data: items, error } = await supabase
           .from('gallery_items')
-          .select(`
-            *,
-            gallery_item_categories (
-              category_name
-            )
-          `)
+          .select('*')
           .order('created_at', { ascending: false })
         
         if (error) {
@@ -100,13 +105,15 @@ export default function AlternatingGallery() {
           return
         }
         
-        // Process items to include categories
+        // Ensure category is always a string
         const processedItems = items?.map(item => ({
           ...item,
-          categories: item.gallery_item_categories?.map((cat: { category_name: string }) => cat.category_name) || 
-                     (item.category ? [item.category] : ['Uncategorized'])
+          category: item.category || 'Uncategorized'
         })) || [];
         
+        console.log('Processed items:', processedItems);
+        
+        console.log('Setting gallery items:', processedItems);
         setGalleryItems(processedItems)
       } catch (error) {
         console.error('Error fetching gallery items:', error)
@@ -127,8 +134,10 @@ export default function AlternatingGallery() {
   const filteredItems = selectedCategory === 'All' 
     ? galleryItems 
     : galleryItems.filter(item => 
-        (item.categories && item.categories.includes(selectedCategory)) || 
-        item.category === selectedCategory
+        item.category
+          .split(',')
+          .map(cat => cat.trim())
+          .some(cat => cat.toLowerCase() === selectedCategory.toLowerCase())
       )
 
   return (
