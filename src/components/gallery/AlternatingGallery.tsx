@@ -3,6 +3,7 @@
 import { motion, AnimatePresence } from 'framer-motion'
 import Image from 'next/image'
 import { useState, useEffect } from 'react'
+import { useSearchParams } from 'next/navigation'
 import { supabase } from '@/lib/supabase/client'
 
 interface GalleryItem {
@@ -70,7 +71,10 @@ const ImagePopup = ({ item, onClose }: ImagePopupProps) => {
 }
 
 export default function AlternatingGallery() {
-  const [selectedCategory, setSelectedCategory] = useState('All')
+  const searchParams = useSearchParams()
+  const categoryFromUrl = searchParams.get('category')
+  
+  const [selectedCategory, setSelectedCategory] = useState(categoryFromUrl || 'All')
   const [selectedImage, setSelectedImage] = useState<GalleryItem | null>(null)
   const [galleryItems, setGalleryItems] = useState<GalleryItem[]>([])
 
@@ -98,6 +102,13 @@ export default function AlternatingGallery() {
     fetchGalleryItems()
   }, [])
 
+  // Update selected category when URL parameter changes
+  useEffect(() => {
+    if (categoryFromUrl) {
+      setSelectedCategory(categoryFromUrl)
+    }
+  }, [categoryFromUrl])
+
   const filteredItems = galleryItems.filter(item =>
     selectedCategory.toLowerCase() === 'all' ? true : item.category.toLowerCase() === selectedCategory.toLowerCase()
   )
@@ -105,21 +116,18 @@ export default function AlternatingGallery() {
   return (
     <>
       {/* Category Filter */}
-      <div className="w-full max-w-6xl mx-auto px-4 mb-12">
-        <div className="flex flex-wrap gap-4 justify-center">
+      <div className="w-full max-w-6xl mx-auto px-4 mb-8 sm:mb-12">
+        <div className="flex flex-wrap gap-2 sm:gap-4 justify-center">
+          {/* Mobile: Show fewer buttons per row, Desktop: Show all */}
           {categories.map((category) => (
             <button
               key={category}
               onClick={() => setSelectedCategory(category)}
-              className={`px-6 py-3 rounded-full text-sm font-medium transition-all duration-300 ease-in-out
-                ${selectedCategory === category
-                  ? 'bg-gradient-to-r from-[#E6D5B8] to-[#C4A484] text-[#4A3728] shadow-lg scale-105'
-                  : 'bg-gradient-to-r from-[#F5EEE6] to-[#E6D5B8] hover:from-[#E6D5B8] hover:to-[#D4C4A8] text-[#6B4F4F] hover:scale-105 hover:shadow-md'
-                } dark:${
-                  selectedCategory === category
-                    ? 'from-zinc-100 to-zinc-300 text-zinc-900'
-                    : 'from-zinc-800 to-zinc-700 hover:from-zinc-700 hover:to-zinc-600 text-zinc-100'
-                }`}
+              className={`px-3 py-2 sm:px-6 sm:py-3 rounded-full text-xs sm:text-sm font-medium transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-md ${
+                selectedCategory === category
+                  ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg border border-blue-600 dark:bg-white dark:text-blue-600 dark:shadow-lg dark:border-white dark:from-white dark:to-white'
+                  : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 hover:border-gray-400 shadow-sm dark:bg-zinc-800 dark:border-zinc-600 dark:text-zinc-200 dark:hover:bg-zinc-700 dark:hover:border-zinc-500 dark:shadow-sm'
+              }`}
             >
               {category}
             </button>
@@ -129,7 +137,7 @@ export default function AlternatingGallery() {
 
       {/* Gallery Grid */}
       <div className="w-full max-w-[2000px] mx-auto px-4">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2 sm:gap-4">
           {filteredItems.map((item) => (
             <motion.div
               key={item.id}
@@ -143,7 +151,7 @@ export default function AlternatingGallery() {
               <motion.div
                 whileHover={{ scale: 1.05 }}
                 transition={{ duration: 0.3 }}
-                className="relative h-[300px] w-full overflow-hidden rounded-xl"
+                className="relative h-[200px] sm:h-[250px] md:h-[300px] w-full overflow-hidden rounded-xl"
               >
                 <Image
                   src={transformImageUrl(item.image_url)}

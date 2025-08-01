@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion'
 import Image from 'next/image'
+import Link from 'next/link'
 import { useRef, useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase/client'
 
@@ -143,7 +144,10 @@ export default function ScrollingGallery() {
               whileHover={{ scale: 1.05 }}
               transition={{ duration: 0.3 }}
             >
-              <div className="relative h-[400px] w-[300px] overflow-hidden rounded-xl">
+              <Link 
+                href={`/gallery?category=${encodeURIComponent(item.category)}`}
+                className="block relative h-[400px] w-[300px] overflow-hidden rounded-xl cursor-pointer"
+              >
                 <Image
                   src={item.image_url}
                   alt={item.title}
@@ -153,8 +157,9 @@ export default function ScrollingGallery() {
                 />
                 <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4">
                   <p className="text-white/80 text-lg font-medium capitalize">{item.category}</p>
+                  <p className="text-white/60 text-sm mt-1">View Gallery →</p>
                 </div>
-              </div>
+              </Link>
             </motion.div>
           ))}
         </motion.div>
