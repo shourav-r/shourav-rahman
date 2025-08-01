@@ -146,18 +146,19 @@ export default function ScrollingGallery() {
             >
               <Link 
                 href={`/gallery?category=${encodeURIComponent(item.category)}`}
-                className="block relative h-[400px] w-[300px] overflow-hidden rounded-xl cursor-pointer"
+                className="block relative h-[300px] w-[240px] md:h-[400px] md:w-[300px] overflow-hidden rounded-xl cursor-pointer"
               >
                 <Image
                   src={item.image_url}
                   alt={item.title}
                   fill
                   className="object-cover"
-                  sizes="(max-width: 300px) 100vw, 300px"
+                  sizes="(max-width: 640px) 240px, 300px"
+                  priority={index < 3} // Only prioritize first 3 images for better LCP
                 />
                 <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4">
-                  <p className="text-white/80 text-lg font-medium capitalize">{item.category}</p>
-                  <p className="text-white/60 text-sm mt-1">View Gallery →</p>
+                  <p className="text-white/80 text-base md:text-lg font-medium capitalize">{item.category}</p>
+                  <p className="text-white/60 text-xs md:text-sm mt-1">View Gallery →</p>
                 </div>
               </Link>
             </motion.div>

@@ -16,22 +16,45 @@ export const viewport: Viewport = {
 }
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NODE_ENV === 'production' ? 'https://shourav.netlify.app' : 'http://localhost:3000'),
-  title: 'Artist Portfolio | Creative Works & Gallery',
-  description: 'Explore a curated collection of artwork including paintings, drawings, illustrations, and digital art. Experience creativity through various mediums and styles.',
-  keywords: ['art', 'portfolio', 'gallery', 'paintings', 'illustrations', 'digital art'],
-  authors: [{ name: 'Shourav Rahman' }],
+  title: "Shourav's Portfolio",
+  description: 'Professional portfolio showcasing my work and skills.',
+  icons: {
+    icon: '/favicon.ico',
+    shortcut: '/favicon.ico',
+    apple: '/favicon.ico',
+    other: {
+      rel: 'icon',
+      url: '/favicon.ico',
+    },
+  },
   openGraph: {
-    title: 'Artist Portfolio | Creative Works & Gallery',
-    description: 'Explore a curated collection of artwork including paintings, drawings, illustrations, and digital art.',
-    images: ['/og-image.jpg'],
+    title: "Shourav's Portfolio",
+    description: 'Professional portfolio showcasing my work, skills, and experience.',
+    images: [
+      {
+        url: '/og-image.jpg',
+        width: 1200,
+        height: 630,
+        alt: "Shourav's Portfolio",
+      }
+    ],
     type: 'website',
+    siteName: "Shourav's Portfolio",
+    locale: 'en_US',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Artist Portfolio | Creative Works & Gallery',
-    description: 'Explore a curated collection of artwork including paintings, drawings, illustrations, and digital art.',
-    images: ['/og-image.jpg'],
+    title: "Shourav's Portfolio",
+    description: 'Professional portfolio showcasing my work and creative projects.',
+    images: [
+      {
+        url: '/og-image.jpg',
+        width: 1200,
+        height: 630,
+        alt: "Shourav's Portfolio",
+      }
+    ],
+    creator: '@yourtwitterhandle',
   },
   robots: 'index, follow',
 }

@@ -20,35 +20,35 @@ const staggerContainer = {
 export default function AboutPage() {
   return (
     <div className="min-h-screen">
-      <section className="py-12">
-        <div className="container mx-auto px-4">
+      <section className="py-8 sm:py-12">
+        <div className="container mx-auto px-4 sm:px-6">
           {/* Header Section */}
           <motion.div 
-            className="text-center mb-16"
+            className="text-center mb-10 sm:mb-16"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
-            <h1 className="text-4xl md:text-5xl font-bold mb-6 text-gradient">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 sm:mb-6 text-gradient">
               About Me
             </h1>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+            <p className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto px-2">
               A journey through art, creativity, and continuous learning
             </p>
           </motion.div>
 
           {/* Main Content */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center mb-24">
+          <div className="flex flex-col md:flex-row gap-8 md:gap-12 items-center mb-16 md:mb-24">
             {/* Image Section */}
             <motion.div 
-              className="relative h-[400px] w-[400px] mx-auto rounded-full overflow-hidden shadow-2xl ring-4 ring-primary/30"
-              initial={{ opacity: 0, x: -50 }}
-              animate={{ opacity: 1, x: 0 }}
+              className="relative h-[250px] w-[250px] sm:h-[350px] sm:w-[350px] md:h-[400px] md:w-[400px] mx-auto rounded-full overflow-hidden shadow-2xl ring-2 md:ring-4 ring-primary/30"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
             >
               <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-transparent z-10 rounded-full" />
               <div className="w-full h-full bg-gradient-to-br from-primary/30 to-primary/10 rounded-full flex items-center justify-center">
-                <div className="text-6xl font-bold text-primary/60">
+                <div className="text-4xl sm:text-5xl md:text-6xl font-bold text-primary/60">
                   SR
                 </div>
               </div>
@@ -56,18 +56,18 @@ export default function AboutPage() {
 
             {/* Bio Section */}
             <motion.div 
-              className="space-y-6"
-              initial={{ opacity: 0, x: 50 }}
-              animate={{ opacity: 1, x: 0 }}
+              className="space-y-4 sm:space-y-6 mt-8 md:mt-0 text-center md:text-left"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
             >
-              <h2 className="text-3xl font-semibold mb-4 text-gradient">
+              <h2 className="text-2xl sm:text-3xl font-semibold mb-3 sm:mb-4 text-gradient">
                 My Artistic Journey
               </h2>
-              <p className="text-muted-foreground leading-relaxed">
+              <p className="text-muted-foreground leading-relaxed text-sm sm:text-base">
                 From an early age, I was drawn to the world of visual arts. What started as simple sketches in school notebooks evolved into a passionate pursuit of various art forms.
               </p>
-              <p className="text-muted-foreground leading-relaxed">
+              <p className="text-muted-foreground leading-relaxed text-sm sm:text-base">
                 Through years of dedicated practice and formal education, I&apos;ve developed expertise in multiple artistic disciplines, from traditional painting to digital design.
               </p>
             </motion.div>
@@ -75,21 +75,21 @@ export default function AboutPage() {
 
           {/* Skills & Education */}
           <motion.div 
-            className="grid grid-cols-1 md:grid-cols-2 gap-12 mb-24"
+            className="grid grid-cols-1 md:grid-cols-2 gap-8 sm:gap-12 mb-16 md:mb-24"
             variants={staggerContainer}
             initial="initial"
             animate="animate"
           >
             {/* Education Timeline */}
             <motion.div 
-              className="space-y-8"
+              className="space-y-6 sm:space-y-8"
               variants={fadeIn}
             >
-              <h3 className="text-2xl font-semibold mb-6 text-gradient">
+              <h3 className="text-xl sm:text-2xl font-semibold mb-4 sm:mb-6 text-gradient">
                 Education & Training
               </h3>
               
-              <div className="space-y-4">
+              <div className="space-y-3 sm:space-y-4">
                 {[
                   {
                     title: "Fine Arts Degree",
