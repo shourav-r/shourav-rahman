@@ -19,7 +19,7 @@ const TypewriterText = ({ text, delay = 50 }: { text: string; delay?: number }) 
     }
   }, [currentIndex, delay, text])
 
-  return <span>{displayText}</span>
+  return <span className="text-foreground">{displayText}</span>
 }
 
 export default function Hero() {
@@ -41,7 +41,7 @@ export default function Hero() {
           transition={{ duration: 0.8, delay: 0.2 }}
           className="space-y-6"
         >
-          <h1 className="text-5xl md:text-7xl font-bold tracking-tight">
+          <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold tracking-tight">
             <TypewriterText text="Shourav Rahman" />
           </h1>
 
@@ -49,7 +49,7 @@ export default function Hero() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.8, delay: 1.5 }}
-            className="text-2xl md:text-3xl font-medium text-muted-foreground"
+            className="text-xl sm:text-2xl md:text-3xl font-medium text-muted-foreground"
           >
             Creating Digital Art Without Boundaries
           </motion.h2>

@@ -221,7 +221,10 @@ export default function Header() {
                 <Button
                   variant="ghost"
                   size="icon"
-                  onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+                  onClick={() => {
+                    setTheme(theme === 'dark' ? 'light' : 'dark');
+                    setIsMenuOpen(false);
+                  }}
                   className="relative group"
                   aria-label="Toggle theme"
                 >
