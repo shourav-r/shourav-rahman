@@ -131,7 +131,7 @@ export default function ScrollingGallery() {
           dragConstraints={{ right: 0, left: -width }}
           onDragStart={() => setIsDragging(true)}
           onDragEnd={handleDragEnd}
-          className="flex gap-4"
+          className="flex gap-2 sm:gap-4"
           style={{
             x: isDragging ? undefined : 0,
             transition: isDragging ? 'none' : 'transform 0.5s ease-out'
@@ -140,13 +140,13 @@ export default function ScrollingGallery() {
           {extendedGalleryItems.map((item, index) => (
             <motion.div
               key={`${item.id}-${index}`}
-              className="min-w-[300px] relative group"
+              className="min-w-[calc(50vw-24px)] sm:min-w-[300px] relative group"
               whileHover={{ scale: 1.05 }}
               transition={{ duration: 0.3 }}
             >
               <Link 
                 href={`/gallery?category=${encodeURIComponent(item.category)}`}
-                className="block relative h-[300px] w-[240px] md:h-[400px] md:w-[300px] overflow-hidden rounded-xl cursor-pointer"
+                className="block relative aspect-square w-[calc(50vw-24px)] sm:h-[300px] sm:w-[240px] md:h-[400px] md:w-[300px] overflow-hidden rounded-xl cursor-pointer"
               >
                 <Image
                   src={item.image_url}
