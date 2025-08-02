@@ -4,27 +4,27 @@
   functions = ".netlify/functions"
 
 [build.environment]
+  # Next.js environment variables
   NEXT_TELEMETRY_DISABLED = "1"
-  # Disable secrets scanning for Supabase URLs (they're meant to be public)
-  SECRETS_SCAN_ENABLED = "false"
   NETLIFY_NEXT_PLUGIN_SKIP = "true"
+  
+  # Disable secrets scanning for public URLs
+  SECRETS_SCAN_ENABLED = "false"
 
 # Required for Next.js 13+ with server components
 [[plugins]]
   package = "@netlify/plugin-nextjs"
-  [plugins.inputs]
-    external_node_modules = ["@supabase/supabase-js"]
 
-# Handle client-side routing
+# Handle client-side routing with fallback
 [[redirects]]
   from = "/*"
-  to = "/index.html"
+  to = "/.netlify/functions/next"
   status = 200
   force = false
 
-# Enable Server-Side Rendering (SSR) for all pages
+# Required for Next.js API routes
 [[redirects]]
-  from = "/*"
+  from = "/api/*"
   to = "/.netlify/functions/next"
   status = 200
   force = true

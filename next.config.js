@@ -1,10 +1,27 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Remove output: 'export' to enable server-side features
   // Enable React Strict Mode
   reactStrictMode: true,
-  // Configure images
+  // Configure images for Next.js Image component
   images: {
+    // Enable image optimization in production
+    unoptimized: process.env.NODE_ENV === 'production',
+    // Configure domains for external images
+    domains: [
+      'i.ibb.co',
+      'i.ibb.com',
+      'images.unsplash.com',
+      'plus.unsplash.com',
+      'www.pictoclub.com',
+      'img.freepik.com',
+      'static.vecteezy.com',
+      'imgs.search.brave.com',
+      'fcsccdavaidltzupeotu.supabase.co'
+    ],
+    // Disable image optimization for Netlify (handled by Netlify's image optimization)
+    loader: 'default',
+    // Set minimum cache TTL
+    minimumCacheTTL: 60,
     remotePatterns: [
       {
         protocol: 'https',
