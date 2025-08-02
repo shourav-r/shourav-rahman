@@ -6,15 +6,23 @@ import './globals.css'
 
 const inter = Inter({ subsets: ['latin'] })
 
+// Set the base URL for metadata (replace with your production URL)
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://your-production-url.com';
+
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
   maximumScale: 1,
   userScalable: false,
   viewportFit: 'cover',
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#ffffff' },
+    { media: '(prefers-color-scheme: dark)', color: '#000000' },
+  ],
 }
 
 export const metadata: Metadata = {
+  metadataBase: new URL(baseUrl),
   title: "Shourav's Portfolio",
   description: 'Professional portfolio showcasing my work and creative projects.',
   icons: {
@@ -44,10 +52,6 @@ export const metadata: Metadata = {
     images: ['/og-image.jpg'],
   },
   robots: 'index, follow',
-  themeColor: [
-    { media: '(prefers-color-scheme: light)', color: '#ffffff' },
-    { media: '(prefers-color-scheme: dark)', color: '#000000' },
-  ],
 }
 
 export default function RootLayout({

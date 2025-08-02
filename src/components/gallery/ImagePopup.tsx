@@ -27,16 +27,21 @@ const ImagePopup: React.FC<ImagePopupProps> = ({
   const popupRef = useRef<HTMLDivElement>(null);
   const touchTime = useRef(0);
 
-  // Handle touch events for swipe navigation
+  // Handle touch events for swipe navigation with improved detection
   const handleTouchStart = (e: React.TouchEvent) => {
-    touchTime.current = Date.now();
-    setTouchStart(e.targetTouches[0].clientX);
-    setTouchEnd(e.targetTouches[0].clientX);
+    // Only proceed if we have a valid touch
+    if (e.touches.length === 1) {
+      touchTime.current = Date.now();
+      setTouchStart(e.touches[0].clientX);
+      setTouchEnd(e.touches[0].clientX);
+    }
   };
 
   const handleTouchMove = (e: React.TouchEvent) => {
-    if (touchStart) {
-      setTouchEnd(e.targetTouches[0].clientX);
+    // Prevent default to avoid scrolling the page
+    e.preventDefault();
+    if (e.touches.length === 1 && touchStart) {
+      setTouchEnd(e.touches[0].clientX);
     }
   };
 
@@ -44,33 +49,40 @@ const ImagePopup: React.FC<ImagePopupProps> = ({
     if (!touchStart || !touchEnd) return;
     
     const diff = touchStart - touchEnd;
-    const swipeThreshold = 30;
-    const velocityThreshold = 0.3;
-    const velocity = Math.abs(diff) / (Date.now() - touchTime.current);
+    const swipeThreshold = 30; // Minimum distance to trigger navigation
+    const velocityThreshold = 0.3; // Minimum velocity to trigger navigation
+    const timeDiff = Date.now() - touchTime.current;
+    const velocity = Math.abs(diff) / (timeDiff || 1);
     
+    // Reset touch state with a small delay
     const resetTouch = () => {
       setTouchStart(0);
       setTouchEnd(0);
     };
     
+    // Check for right-to-left swipe (next image)
     if ((diff > swipeThreshold || velocity > velocityThreshold) && currentIndex < galleryItems.length - 1) {
       const nextItem = galleryItems[currentIndex + 1];
       if (nextItem) {
+        setDirection(1);
         setSelectedImage(nextItem);
         setTimeout(resetTouch, 100);
         return;
       }
     }
     
+    // Check for left-to-right swipe (previous image)
     if ((diff < -swipeThreshold || velocity > velocityThreshold) && currentIndex > 0) {
       const prevItem = galleryItems[currentIndex - 1];
       if (prevItem) {
+        setDirection(-1);
         setSelectedImage(prevItem);
         setTimeout(resetTouch, 100);
         return;
       }
     }
     
+    // If no navigation occurred, reset touch state immediately
     resetTouch();
   };
 

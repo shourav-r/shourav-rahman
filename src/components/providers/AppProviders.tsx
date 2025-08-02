@@ -13,8 +13,8 @@ export default function AppProviders({ children }: AppProvidersProps) {
     <ErrorBoundary>
       <ThemeProvider
         attribute="class"
-        defaultTheme="system"
-        enableSystem
+        defaultTheme="dark"
+        enableSystem={false}
         disableTransitionOnChange
       >
         {children}
