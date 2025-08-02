@@ -1,0 +1,320 @@
+'use client';
+
+import { motion, AnimatePresence } from 'framer-motion';
+import Image from 'next/image';
+import { useState, useEffect, useRef } from 'react';
+import { GalleryItem } from './AlternatingGallery';
+
+interface ImagePopupProps {
+  item: GalleryItem | null;
+  onClose: () => void;
+  galleryItems: GalleryItem[];
+  setSelectedImage: (item: GalleryItem) => void;
+  currentIndex: number;
+}
+
+const ImagePopup: React.FC<ImagePopupProps> = ({ 
+  item, 
+  onClose, 
+  galleryItems, 
+  setSelectedImage,
+  currentIndex 
+}) => {
+  const [isLoading, setIsLoading] = useState(true);
+  const [touchStart, setTouchStart] = useState(0);
+  const [touchEnd, setTouchEnd] = useState(0);
+  const [direction, setDirection] = useState(0);
+  const popupRef = useRef<HTMLDivElement>(null);
+  const touchTime = useRef(0);
+
+  // Handle touch events for swipe navigation
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchTime.current = Date.now();
+    setTouchStart(e.targetTouches[0].clientX);
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (touchStart) {
+      setTouchEnd(e.targetTouches[0].clientX);
+    }
+  };
+
+  const handleTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
+    
+    const diff = touchStart - touchEnd;
+    const swipeThreshold = 30;
+    const velocityThreshold = 0.3;
+    const velocity = Math.abs(diff) / (Date.now() - touchTime.current);
+    
+    const resetTouch = () => {
+      setTouchStart(0);
+      setTouchEnd(0);
+    };
+    
+    if ((diff > swipeThreshold || velocity > velocityThreshold) && currentIndex < galleryItems.length - 1) {
+      const nextItem = galleryItems[currentIndex + 1];
+      if (nextItem) {
+        setSelectedImage(nextItem);
+        setTimeout(resetTouch, 100);
+        return;
+      }
+    }
+    
+    if ((diff < -swipeThreshold || velocity > velocityThreshold) && currentIndex > 0) {
+      const prevItem = galleryItems[currentIndex - 1];
+      if (prevItem) {
+        setSelectedImage(prevItem);
+        setTimeout(resetTouch, 100);
+        return;
+      }
+    }
+    
+    resetTouch();
+  };
+
+  // Handle keyboard navigation
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (!item) return;
+      
+      if (e.key === 'ArrowRight' && currentIndex < galleryItems.length - 1) {
+        e.preventDefault();
+        const nextItem = galleryItems[currentIndex + 1];
+        if (nextItem) {
+          requestAnimationFrame(() => {
+            setSelectedImage(nextItem);
+          });
+        }
+      } else if (e.key === 'ArrowLeft' && currentIndex > 0) {
+        e.preventDefault();
+        const prevItem = galleryItems[currentIndex - 1];
+        if (prevItem) {
+          requestAnimationFrame(() => {
+            setSelectedImage(prevItem);
+          });
+        }
+      } else if (e.key === 'Escape') {
+        onClose();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [item, currentIndex, galleryItems, onClose, setSelectedImage]);
+
+  // Handle click outside to close
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (popupRef.current && !popupRef.current.contains(event.target as Node)) {
+        onClose();
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [onClose]);
+
+  // Disable body scroll when popup is open
+  useEffect(() => {
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, []);
+
+  if (!item) return null;
+
+  // Animation variants
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: { 
+      opacity: 1,
+      transition: {
+        when: "beforeChildren",
+        duration: 0.3,
+        ease: [0.16, 1, 0.3, 1]
+      }
+    },
+    exit: { 
+      opacity: 0,
+      transition: {
+        when: "afterChildren",
+        duration: 0.2,
+        ease: [0.4, 0, 0.2, 1]
+      }
+    }
+  };
+
+  const imageVariants = {
+    enter: (direction: number) => ({
+      x: direction > 0 ? '100%' : '-100%',
+      opacity: 0,
+      scale: 0.95
+    }),
+    center: {
+      x: 0,
+      opacity: 1,
+      scale: 1,
+      transition: {
+        type: 'spring',
+        damping: 25,
+        stiffness: 300,
+        mass: 0.8,
+        velocity: 2
+      }
+    },
+    exit: (direction: number) => ({
+      x: direction > 0 ? '-100%' : '100%',
+      opacity: 0,
+      scale: 0.95,
+      transition: {
+        duration: 0.25,
+        ease: [0.4, 0, 0.2, 1]
+      }
+    })
+  };
+
+  return (
+    <AnimatePresence mode="wait">
+      <motion.div
+        key="popup-overlay"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.3 }}
+        className="fixed inset-0 bg-black/95 z-50 flex items-center justify-center p-4 cursor-zoom-out"
+        onClick={onClose}
+      >
+        <motion.div
+          ref={popupRef}
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+          exit="exit"
+          className="relative w-full max-w-6xl max-h-[90vh] flex items-center justify-center"
+          onClick={(e) => e.stopPropagation()}
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
+          style={{
+            x: touchEnd - touchStart,
+            transition: 'transform 0.1s cubic-bezier(0.16, 1, 0.3, 1)',
+          }}
+        >
+          <motion.div
+            key={item.id}
+            custom={direction}
+            variants={imageVariants}
+            initial="enter"
+            animate="center"
+            exit="exit"
+            className="w-full h-full flex items-center justify-center"
+          >
+            <Image
+              src={transformImageUrl(item.image_url)}
+              alt={item.title || 'Gallery image'}
+              width={1600}
+              height={1200}
+              className="max-w-full max-h-[90vh] object-contain select-none"
+              draggable={false}
+              priority
+              onLoadingComplete={() => setIsLoading(false)}
+              onError={(e) => {
+                const target = e.target as HTMLImageElement;
+                target.style.display = 'none';
+              }}
+            />
+          </motion.div>
+          
+          {/* Navigation Arrows */}
+          {currentIndex > 0 && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                const prevItem = galleryItems[currentIndex - 1];
+                if (prevItem) {
+                  setDirection(-1);
+                  setSelectedImage(prevItem);
+                }
+              }}
+              className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 text-white bg-black/60 hover:bg-black/80 rounded-full p-2 transition-all duration-200 transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-white/50 z-10"
+              aria-label="Previous image"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
+          )}
+          
+          {currentIndex < galleryItems.length - 1 && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                const nextItem = galleryItems[currentIndex + 1];
+                if (nextItem) {
+                  setDirection(1);
+                  setSelectedImage(nextItem);
+                }
+              }}
+              className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 text-white bg-black/60 hover:bg-black/80 rounded-full p-2 transition-all duration-200 transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-white/50 z-10"
+              aria-label="Next image"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
+          )}
+          
+          <button
+            onClick={onClose}
+            className="absolute top-4 right-4 text-white bg-black/60 hover:bg-black/80 rounded-full p-2 transition-all duration-200 transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-white/50 z-10"
+            aria-label="Close"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+          
+          {/* Pagination */}
+          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-2 z-10">
+            {galleryItems.map((_, index) => (
+              <motion.button
+                key={index}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setDirection(index > currentIndex ? 1 : -1);
+                  setSelectedImage(galleryItems[index]);
+                }}
+                className={`h-2 rounded-full ${index === currentIndex ? 'bg-white' : 'bg-white/50'}`}
+                initial={{ width: index === currentIndex ? 24 : 8 }}
+                animate={{ width: index === currentIndex ? 24 : 8 }}
+                whileHover={{ scale: 1.2 }}
+                transition={{ type: 'spring', stiffness: 500, damping: 30 }}
+                aria-label={`Go to image ${index + 1}`}
+              />
+            ))}
+          </div>
+          
+          {isLoading && (
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="w-16 h-16 border-4 border-white/10 border-t-white/30 rounded-full animate-spin"></div>
+            </div>
+          )}
+        </motion.div>
+      </motion.div>
+    </AnimatePresence>
+  );
+};
+
+export default ImagePopup;
+
+// Helper function to transform image URLs
+function transformImageUrl(url: string): string {
+  if (!url) return '';
+  // Remove any existing query parameters
+  const cleanUrl = url.split('?')[0];
+  // Add width and quality parameters
+  return `${cleanUrl}?width=1600&quality=80`;
+}

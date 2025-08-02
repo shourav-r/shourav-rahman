@@ -5,6 +5,7 @@ import Image from 'next/image'
 import { useState, useEffect, useRef } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { supabase } from '@/lib/supabase/client'
+import ImagePopup from './ImagePopup'
 
 // Preload images function
 const preloadImages = (urls: string[]) => {
@@ -15,7 +16,7 @@ const preloadImages = (urls: string[]) => {
   });
 };
 
-interface GalleryItem {
+export interface GalleryItem {
   id: number
   title: string
   category: string
@@ -32,94 +33,6 @@ const transformImageUrl = (url: string) => {
     return url.replace('i.ibb.co.com', 'i.ibb.co')
   }
   return url
-}
-
-interface ImagePopupProps {
-  item: GalleryItem | null
-  onClose: () => void
-}
-
-const ImagePopup = ({ item, onClose }: ImagePopupProps) => {
-  const [isLoading, setIsLoading] = useState(true);
-  const [imageSrc, setImageSrc] = useState('');
-
-  useEffect(() => {
-    if (item?.image_url) {
-      const img = new (window as Window & { Image: { new (): HTMLImageElement } }).Image();
-      img.src = transformImageUrl(item.image_url);
-      img.onload = () => {
-        setImageSrc(img.src);
-        setIsLoading(false);
-      };
-      img.onerror = () => {
-        console.error('Error loading image in popup:', item.image_url);
-        setIsLoading(false);
-      };
-    }
-  }, [item]);
-
-  if (!item) return null;
-
-  return (
-    <AnimatePresence>
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        onClick={onClose}
-        className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4"
-      >
-        <motion.div
-          initial={{ scale: 0.9, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          exit={{ scale: 0.9, opacity: 0 }}
-          transition={{ type: "spring", damping: 20, stiffness: 300 }}
-          onClick={(e) => e.stopPropagation()}
-          className="relative w-full max-w-5xl max-h-[90vh] rounded-xl overflow-hidden"
-        >
-          {isLoading ? (
-            <div className="w-full h-full flex items-center justify-center bg-gray-800">
-              <div className="animate-pulse">
-                <div className="h-64 w-64 rounded-full bg-gray-700"></div>
-              </div>
-            </div>
-          ) : (
-            <Image
-              src={imageSrc || transformImageUrl(item.image_url)}
-              alt={item.title || 'Gallery image'}
-              width={1200}
-              height={800}
-              className="w-full h-auto max-h-[80vh] object-contain"
-              priority
-              onError={(e) => {
-                const target = e.target as HTMLImageElement;
-                target.style.display = 'none';
-              }}
-            />
-          )}
-          
-          <button
-            onClick={onClose}
-            className="absolute top-4 right-4 text-white bg-black/70 rounded-full p-2 hover:bg-black transition-colors z-10"
-            aria-label="Close"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
-          
-          {item.title && (
-            <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4 text-white">
-              <h3 className="text-lg font-medium">{item.title}</h3>
-              {item.category && (
-                <p className="text-sm text-gray-300 capitalize">{item.category}</p>
-              )}
-            </div>
-          )}
-        </motion.div>
-      </motion.div>
-    </AnimatePresence>
-  )
 }
 
 export default function AlternatingGallery() {
@@ -264,10 +177,17 @@ export default function AlternatingGallery() {
         </div>
       </div>
 
-      <ImagePopup
-        item={selectedImage}
-        onClose={() => setSelectedImage(null)}
-      />
+      <AnimatePresence>
+        {selectedImage && (
+          <ImagePopup
+            item={selectedImage}
+            onClose={() => setSelectedImage(null)}
+            galleryItems={filteredItems}
+            setSelectedImage={setSelectedImage}
+            currentIndex={filteredItems.findIndex(item => item.id === selectedImage.id)}
+          />
+        )}
+      </AnimatePresence>
     </>
   )
 }
