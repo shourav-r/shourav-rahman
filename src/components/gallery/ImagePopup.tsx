@@ -207,21 +207,15 @@ const ImagePopup: React.FC<ImagePopupProps> = ({
     })
   };
 
-  // Optimized transition for navigation buttons
-  const buttonTransition = {
-    type: 'tween',
-    duration: 0.15,
-    ease: 'easeOut'
-  };
-
   // Scroll to active thumbnail
   useEffect(() => {
-    if (item) {
-      const timer = setTimeout(() => {
-        scrollToThumbnail(currentIndex);
-      }, 100);
-      return () => clearTimeout(timer);
-    }
+    if (!item) return;
+    
+    const timer = setTimeout(() => {
+      scrollToThumbnail(currentIndex);
+    }, 100);
+    
+    return () => clearTimeout(timer);
   }, [currentIndex, item]);
 
   return (
@@ -321,11 +315,12 @@ const ImagePopup: React.FC<ImagePopupProps> = ({
             </motion.button>
           )}
           
-<motion.button
+          {/* Desktop close button */}
+          <motion.button
             onClick={onClose}
             whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.95 }}
-            transition={buttonTransition}
+            whileTap={{ scale: 0.9 }}
+            transition={{ type: 'spring', stiffness: 400, damping: 17 }}
             className="hidden md:block absolute top-4 right-4 text-white bg-black/60 hover:bg-black/80 rounded-full p-2 focus:outline-none focus:ring-2 focus:ring-white/50 z-10"
             aria-label="Close"
           >
