@@ -160,13 +160,19 @@ export default function AboutPage() {
                 variants={staggerContainer}
               >
                 {[
-                  'Oil Painting',
-                  'Digital Illustration',
-                  'Watercolor',
+                  'Digital Art',
                   'Character Design',
-                  'Mixed Media',
+                  'Illustration',
+                  'Interdisciplinary',
                   'Motion Graphics',
-                  'Concept Art',
+                  'Conceptual Art',
+                  'Brand Identity',
+                  'Typography',
+                  '3D Modeling',
+                  'Interior & Exterior Design',
+                  'Performance Art',
+                  'Product & Packaging Design',
+                  'Drawing & Painting',
                   'Video Editing'
                 ].map((skill, index) => (
                   <motion.div
@@ -194,7 +200,7 @@ export default function AboutPage() {
               Artist Statement
             </h3>
             <p className="text-muted-foreground leading-relaxed">
-              My work explores the intersection of traditional and digital art forms, seeking to bridge the gap between classical techniques and modern technology. Through my diverse artistic practice, I aim to create pieces that not only captivate visually but also tell compelling stories and evoke emotional responses.
+            I believe the medium must serve the message. My work begins with a core idea, selecting the perfect tool—brush, stylus, or camera—to create clear, resonant visual forms.
             </p>
           </motion.div>
         </div>

@@ -45,14 +45,15 @@ export default function Hero() {
             <TypewriterText text="Shourav Rahman" />
           </h1>
 
-          <motion.h2
+          <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.8, delay: 1.5 }}
-            className="text-xl sm:text-2xl md:text-3xl font-medium text-muted-foreground"
+            className="text-lg sm:text-xl md:text-2xl font-normal text-muted-foreground space-y-2"
           >
-            Creating Digital Art Without Boundaries
-          </motion.h2>
+            <p className="leading-tight">What if art could do more than just exist?</p>
+            <p className="leading-tight">I create visuals designed to act, persuade, and endure.</p>
+          </motion.div>
         </motion.div>
 
         <motion.div

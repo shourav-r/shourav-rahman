@@ -6,19 +6,18 @@ import Link from 'next/link'
 import { useRef, useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase/client'
 
-interface GalleryItem {
-  id: number
-  title: string
-  category: string
-  image_url: string
-  created_at: string
+interface CategoryItem {
+  id: string
+  name: string
+  imageUrl: string
+  count: number
 }
 
 export default function ScrollingGallery() {
   const [width, setWidth] = useState(0)
   const carousel = useRef<HTMLDivElement>(null)
   const [isDragging, setIsDragging] = useState(false)
-  const [galleryItems, setGalleryItems] = useState<GalleryItem[]>([])
+  const [categoryItems, setCategoryItems] = useState<CategoryItem[]>([])
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
@@ -35,36 +34,38 @@ export default function ScrollingGallery() {
           return
         }
 
-        console.log('Fetched gallery items:', galleryItems)
-
-        // Process items to get latest item per category
-        const categoryMap = new Map()
+        // Get all unique categories
+        const allCategories = new Set<string>();
+        const categoryToLatestItem = new Map<string, string>();
+        const categoryCounts = new Map<string, number>();
         
-        galleryItems?.forEach((item: GalleryItem) => {
-          console.log('Processing item:', item.id, 'with URL:', item.image_url)
+        galleryItems?.forEach((item: any) => {
           // Get all categories for this item (split by comma and trim)
           const categories = (item.category || 'Uncategorized')
             .split(',')
-            .map(cat => cat.trim())
+            .map((cat: string) => cat.trim())
             .filter(Boolean);
           
-          // For each category, keep track of the latest item
           categories.forEach((category: string) => {
-            const existingItem = categoryMap.get(category)
-            if (!existingItem || 
-                new Date(item.created_at) > new Date(existingItem.created_at)) {
-              categoryMap.set(category, {
-                ...item,
-                // Store all categories for this item
-                categories: categories
-              })
+            allCategories.add(category);
+            // Keep track of the latest image for each category
+            if (!categoryToLatestItem.has(category)) {
+              categoryToLatestItem.set(category, item.image_url);
             }
-          })
-        })
+            // Count items in each category
+            categoryCounts.set(category, (categoryCounts.get(category) || 0) + 1);
+          });
+        });
 
-        // Convert map values to array
-        const latestItems = Array.from(categoryMap.values())
-        setGalleryItems(latestItems)
+        // Create an array of category objects with their latest image and count
+        const categoryItems = Array.from(allCategories).map(category => ({
+          id: category.toLowerCase().replace(/\s+/g, '-'),
+          name: category,
+          imageUrl: categoryToLatestItem.get(category) || '',
+          count: categoryCounts.get(category) || 0
+        }));
+
+        setCategoryItems(categoryItems);
       } catch (error) {
         console.error('Error:', error)
       } finally {
@@ -79,7 +80,7 @@ export default function ScrollingGallery() {
     if (carousel.current) {
       setWidth(carousel.current.scrollWidth - carousel.current.offsetWidth)
     }
-  }, [galleryItems])
+  }, [categoryItems])
 
   const handleDragEnd = (event: any, info: any) => {
     setIsDragging(false)
@@ -105,7 +106,7 @@ export default function ScrollingGallery() {
           {[1, 2, 3].map((item) => (
             <div
               key={item}
-              className="min-w-[300px] h-[400px] bg-secondary/50 animate-pulse rounded-xl"
+              className="min-w-[200px] h-[300px] bg-secondary/50 animate-pulse rounded-xl"
             />
           ))}
         </div>
@@ -114,16 +115,13 @@ export default function ScrollingGallery() {
   }
 
   // If no items are found after loading
-  if (!isLoading && galleryItems.length === 0) {
+  if (!isLoading && categoryItems.length === 0) {
     return (
       <div className="w-full py-8 text-center text-muted-foreground">
-        No gallery items found.
+        No categories found.
       </div>
     )
   }
-
-  // Use original gallery items without duplication
-  const extendedGalleryItems = galleryItems
 
   return (
     <div className="relative w-full overflow-hidden py-8">
@@ -137,46 +135,47 @@ export default function ScrollingGallery() {
           dragConstraints={{ right: 0, left: -width }}
           onDragStart={() => setIsDragging(true)}
           onDragEnd={handleDragEnd}
-          className="flex gap-2 sm:gap-4"
+          className="flex gap-4 px-4"
           style={{
             x: isDragging ? undefined : 0,
             transition: isDragging ? 'none' : 'transform 0.5s ease-out'
           }}
         >
-          {extendedGalleryItems.map((item, index) => (
+          {categoryItems.map((category) => (
             <motion.div
-              key={`${item.id}-${index}`}
-              className="min-w-[calc(50vw-24px)] sm:min-w-[300px] relative group"
-              whileHover={{ scale: 1.05 }}
-              transition={{ duration: 0.3 }}
+              key={category.id}
+              className="min-w-[200px] sm:min-w-[250px] relative group flex-shrink-0"
+              whileHover={{ scale: 1.03 }}
+              transition={{ duration: 0.2 }}
             >
               <Link 
-                href={`/gallery?category=${encodeURIComponent(item.category.split(',')[0]?.trim() || '')}`}
-                className="block relative aspect-square w-[calc(50vw-24px)] sm:h-[300px] sm:w-[240px] md:h-[400px] md:w-[300px] overflow-hidden rounded-xl cursor-pointer"
+                href={`/gallery?category=${encodeURIComponent(category.name)}`}
+                className="block relative aspect-[3/4] w-full overflow-hidden rounded-xl cursor-pointer border border-border/50 hover:border-primary/50 transition-all duration-300"
               >
                 <div className="relative w-full h-full">
-                  <Image
-                    src={item.image_url}
-                    alt={item.title || 'Gallery image'}
-                    fill
-                    className="object-cover"
-                    sizes="(max-width: 640px) 240px, 300px"
-                    priority={index < 3} // Only prioritize first 3 images for better LCP
-                    onError={(e) => {
-                      console.error('Error loading image:', item.image_url, e);
-                      const target = e.target as HTMLImageElement;
-                      target.style.display = 'none';
-                    }}
-                  />
-                  {!item.image_url && (
-                    <div className="absolute inset-0 bg-gray-200 flex items-center justify-center">
-                      <span className="text-gray-500">Image not available</span>
+                  {category.imageUrl ? (
+                    <Image
+                      src={category.imageUrl}
+                      alt={category.name}
+                      fill
+                      className="object-cover"
+                      sizes="(max-width: 640px) 200px, 250px"
+                      onError={(e) => {
+                        console.error('Error loading image:', category.imageUrl);
+                        const target = e.target as HTMLImageElement;
+                        target.style.display = 'none';
+                      }}
+                    />
+                  ) : (
+                    <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-secondary/20 flex items-center justify-center">
+                      <span className="text-4xl font-bold text-primary/50">
+                        {category.name.charAt(0).toUpperCase()}
+                      </span>
                     </div>
                   )}
                 </div>
-                <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4">
-                  <p className="text-white/80 text-base md:text-lg font-medium capitalize">{item.category}</p>
-                  <p className="text-white/60 text-xs md:text-sm mt-1">View Gallery →</p>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex flex-col justify-end p-4">
+                  <h3 className="text-white text-xl font-bold capitalize">{category.name}</h3>
                 </div>
               </Link>
             </motion.div>
