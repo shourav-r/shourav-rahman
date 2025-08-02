@@ -182,7 +182,7 @@ export default function AboutPage() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: index * 0.1 }}
                   >
-                    <p className="font-medium">{skill}</p>
+                    <p className="font-medium text-foreground">{skill}</p>
                   </motion.div>
                 ))}
               </motion.div>

@@ -36,6 +36,21 @@ const ImagePopup: React.FC<ImagePopupProps> = ({
     }
   };
 
+  const scrollToThumbnail = (index: number) => {
+    const container = document.querySelector('.thumbnail-container') as HTMLElement | null;
+    const thumb = document.querySelector(`.thumbnail-${index}`) as HTMLElement | null;
+    if (container && thumb) {
+      const containerRect = container.getBoundingClientRect();
+      const thumbRect = thumb.getBoundingClientRect();
+      const scrollLeft = thumb.offsetLeft - (containerRect.width / 2) + (thumbRect.width / 2);
+      
+      container.scrollTo({
+        left: scrollLeft,
+        behavior: 'smooth'
+      });
+    }
+  };
+
   const handleTouchMove = (e: React.TouchEvent) => {
     e.preventDefault();
     if (e.touches.length === 1) {
@@ -291,17 +306,28 @@ const ImagePopup: React.FC<ImagePopupProps> = ({
             </motion.button>
           )}
           
-          <motion.button
+<motion.button
             onClick={onClose}
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.95 }}
             transition={buttonTransition}
-            className="absolute top-4 right-4 text-white bg-black/60 hover:bg-black/80 rounded-full p-2 focus:outline-none focus:ring-2 focus:ring-white/50 z-10"
+            className="hidden md:block absolute top-4 right-4 text-white bg-black/60 hover:bg-black/80 rounded-full p-2 focus:outline-none focus:ring-2 focus:ring-white/50 z-10"
             aria-label="Close"
           >
             <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
+          </motion.button>
+          
+          {/* Mobile close button - bottom center */}
+          <motion.button
+            onClick={onClose}
+            whileTap={{ scale: 0.95 }}
+            transition={buttonTransition}
+            className="md:hidden absolute bottom-6 left-1/2 -translate-x-1/2 text-white bg-black/60 hover:bg-black/80 rounded-full px-6 py-2 focus:outline-none focus:ring-2 focus:ring-white/50 z-10 text-sm font-medium"
+            aria-label="Close"
+          >
+            Close
           </motion.button>
           
           {/* Pagination */}
