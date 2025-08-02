@@ -27,21 +27,23 @@ const ImagePopup: React.FC<ImagePopupProps> = ({
   const popupRef = useRef<HTMLDivElement>(null);
   const touchTime = useRef(0);
 
-  // Handle touch events for swipe navigation with improved detection
+  // Optimized touch handling for smoother performance
   const handleTouchStart = (e: React.TouchEvent) => {
-    // Only proceed if we have a valid touch
     if (e.touches.length === 1) {
-      touchTime.current = Date.now();
+      touchTime.current = performance.now(); // Use performance.now() for better accuracy
       setTouchStart(e.touches[0].clientX);
       setTouchEnd(e.touches[0].clientX);
     }
   };
 
   const handleTouchMove = (e: React.TouchEvent) => {
-    // Prevent default to avoid scrolling the page
     e.preventDefault();
-    if (e.touches.length === 1 && touchStart) {
-      setTouchEnd(e.touches[0].clientX);
+    if (e.touches.length === 1) {
+      const touch = e.touches[0];
+      // Only update state if touch position changed significantly
+      if (Math.abs(touch.clientX - touchEnd) > 2) {
+        setTouchEnd(touch.clientX);
+      }
     }
   };
 
@@ -49,12 +51,12 @@ const ImagePopup: React.FC<ImagePopupProps> = ({
     if (!touchStart || !touchEnd) return;
     
     const diff = touchStart - touchEnd;
-    const swipeThreshold = 30; // Minimum distance to trigger navigation
-    const velocityThreshold = 0.3; // Minimum velocity to trigger navigation
-    const timeDiff = Date.now() - touchTime.current;
-    const velocity = Math.abs(diff) / (timeDiff || 1);
+    const absDiff = Math.abs(diff);
+    const swipeThreshold = 20; // Reduced threshold for more responsive feel
+    const velocityThreshold = 0.2; // Lowered for more sensitive swipes
+    const timeDiff = performance.now() - touchTime.current;
+    const velocity = absDiff / Math.max(timeDiff, 1);
     
-    // Reset touch state with a small delay
     const resetTouch = () => {
       setTouchStart(0);
       setTouchEnd(0);
@@ -66,7 +68,7 @@ const ImagePopup: React.FC<ImagePopupProps> = ({
       if (nextItem) {
         setDirection(1);
         setSelectedImage(nextItem);
-        setTimeout(resetTouch, 100);
+        resetTouch(); // Reset immediately for faster response
         return;
       }
     }
@@ -77,12 +79,11 @@ const ImagePopup: React.FC<ImagePopupProps> = ({
       if (prevItem) {
         setDirection(-1);
         setSelectedImage(prevItem);
-        setTimeout(resetTouch, 100);
+        resetTouch(); // Reset immediately for faster response
         return;
       }
     }
     
-    // If no navigation occurred, reset touch state immediately
     resetTouch();
   };
 
@@ -138,22 +139,22 @@ const ImagePopup: React.FC<ImagePopupProps> = ({
 
   if (!item) return null;
 
-  // Optimized animation variants for faster and smoother transitions
+  // Ultra-optimized animation variants for maximum performance
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: { 
       opacity: 1,
       transition: {
         when: "beforeChildren",
-        duration: 0.2,
-        ease: [0.33, 1, 0.68, 1] // Smoother ease curve
+        duration: 0.15,
+        ease: [0.4, 0, 0.2, 1] // Snappier ease curve
       }
     },
     exit: { 
       opacity: 0,
       transition: {
         when: "afterChildren",
-        duration: 0.15,
+        duration: 0.1,
         ease: [0.4, 0, 0.2, 1]
       }
     }
@@ -161,40 +162,36 @@ const ImagePopup: React.FC<ImagePopupProps> = ({
 
   const imageVariants = {
     enter: (direction: number) => ({
-      x: direction > 0 ? '100%' : '-100%',
+      x: direction > 0 ? '50px' : '-50px', // Reduced distance for faster animation
       opacity: 0,
-      scale: 0.98
+      scale: 0.99
     }),
     center: {
       x: 0,
       opacity: 1,
       scale: 1,
       transition: {
-        type: 'spring',
-        damping: 20, // Reduced damping for snappier movement
-        stiffness: 400, // Increased stiffness for faster animation
-        mass: 0.7, // Lighter mass for quicker response
-        velocity: 1.5, // Slightly reduced velocity for control
-        bounce: 0.1 // Minimal bounce for a more direct feel
+        type: 'tween', // Using tween for more consistent performance
+        duration: 0.2, // Faster animation
+        ease: 'easeOut'
       }
     },
     exit: (direction: number) => ({
-      x: direction > 0 ? '-100%' : '100%',
+      x: direction > 0 ? '-50px' : '50px', // Reduced distance for faster animation
       opacity: 0,
-      scale: 0.98,
+      scale: 0.99,
       transition: {
-        duration: 0.2, // Faster exit
-        ease: [0.4, 0, 0.2, 1]
+        duration: 0.15, // Faster exit
+        ease: 'easeIn'
       }
     })
   };
 
   // Optimized transition for navigation buttons
   const buttonTransition = {
-    type: 'spring',
-    stiffness: 500,
-    damping: 30,
-    mass: 0.5
+    type: 'tween',
+    duration: 0.15,
+    ease: 'easeOut'
   };
 
   return (
