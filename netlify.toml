@@ -6,7 +6,6 @@
 [build.environment]
   # Next.js environment variables
   NEXT_TELEMETRY_DISABLED = "1"
-  NETLIFY_NEXT_PLUGIN_SKIP = "true"
   
   # Disable secrets scanning for public URLs
   SECRETS_SCAN_ENABLED = "false"
