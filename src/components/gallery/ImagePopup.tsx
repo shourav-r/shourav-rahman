@@ -216,7 +216,7 @@ const ImagePopup: React.FC<ImagePopupProps> = ({
     }, 100);
     
     return () => clearTimeout(timer);
-  }, [currentIndex, item]);
+  }, [currentIndex, item, scrollToThumbnail]);
 
   return (
     <AnimatePresence mode="wait">

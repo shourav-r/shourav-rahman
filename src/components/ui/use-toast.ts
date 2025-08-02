@@ -15,6 +15,7 @@ type ToasterToast = ToastProps & {
   action?: ToastActionElement
 }
 
+// @ts-ignore - used as a type
 const actionTypes = {
   ADD_TOAST: 'ADD_TOAST',
   UPDATE_TOAST: 'UPDATE_TOAST',
