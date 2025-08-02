@@ -1,10 +1,10 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Ensure static HTML is generated for the gallery page
-  output: 'export',
-  // Disable image optimization during export since we're using next/image with remote images
+  // Remove output: 'export' to enable server-side features
+  // Enable React Strict Mode
+  reactStrictMode: true,
+  // Configure images
   images: {
-    unoptimized: true,
     remotePatterns: [
       {
         protocol: 'https',
