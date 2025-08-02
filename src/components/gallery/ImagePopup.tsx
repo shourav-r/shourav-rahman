@@ -138,22 +138,22 @@ const ImagePopup: React.FC<ImagePopupProps> = ({
 
   if (!item) return null;
 
-  // Animation variants
+  // Optimized animation variants for faster and smoother transitions
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: { 
       opacity: 1,
       transition: {
         when: "beforeChildren",
-        duration: 0.3,
-        ease: [0.16, 1, 0.3, 1]
+        duration: 0.2,
+        ease: [0.33, 1, 0.68, 1] // Smoother ease curve
       }
     },
     exit: { 
       opacity: 0,
       transition: {
         when: "afterChildren",
-        duration: 0.2,
+        duration: 0.15,
         ease: [0.4, 0, 0.2, 1]
       }
     }
@@ -163,7 +163,7 @@ const ImagePopup: React.FC<ImagePopupProps> = ({
     enter: (direction: number) => ({
       x: direction > 0 ? '100%' : '-100%',
       opacity: 0,
-      scale: 0.95
+      scale: 0.98
     }),
     center: {
       x: 0,
@@ -171,21 +171,30 @@ const ImagePopup: React.FC<ImagePopupProps> = ({
       scale: 1,
       transition: {
         type: 'spring',
-        damping: 25,
-        stiffness: 300,
-        mass: 0.8,
-        velocity: 2
+        damping: 20, // Reduced damping for snappier movement
+        stiffness: 400, // Increased stiffness for faster animation
+        mass: 0.7, // Lighter mass for quicker response
+        velocity: 1.5, // Slightly reduced velocity for control
+        bounce: 0.1 // Minimal bounce for a more direct feel
       }
     },
     exit: (direction: number) => ({
       x: direction > 0 ? '-100%' : '100%',
       opacity: 0,
-      scale: 0.95,
+      scale: 0.98,
       transition: {
-        duration: 0.25,
+        duration: 0.2, // Faster exit
         ease: [0.4, 0, 0.2, 1]
       }
     })
+  };
+
+  // Optimized transition for navigation buttons
+  const buttonTransition = {
+    type: 'spring',
+    stiffness: 500,
+    damping: 30,
+    mass: 0.5
   };
 
   return (
@@ -242,7 +251,7 @@ const ImagePopup: React.FC<ImagePopupProps> = ({
           
           {/* Navigation Arrows */}
           {currentIndex > 0 && (
-            <button
+            <motion.button
               onClick={(e) => {
                 e.stopPropagation();
                 const prevItem = galleryItems[currentIndex - 1];
@@ -251,17 +260,20 @@ const ImagePopup: React.FC<ImagePopupProps> = ({
                   setSelectedImage(prevItem);
                 }
               }}
-              className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 text-white bg-black/60 hover:bg-black/80 rounded-full p-2 transition-all duration-200 transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-white/50 z-10"
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.95 }}
+              transition={buttonTransition}
+              className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 text-white bg-black/60 hover:bg-black/80 rounded-full p-2 focus:outline-none focus:ring-2 focus:ring-white/50 z-10"
               aria-label="Previous image"
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
               </svg>
-            </button>
+            </motion.button>
           )}
           
           {currentIndex < galleryItems.length - 1 && (
-            <button
+            <motion.button
               onClick={(e) => {
                 e.stopPropagation();
                 const nextItem = galleryItems[currentIndex + 1];
@@ -270,24 +282,30 @@ const ImagePopup: React.FC<ImagePopupProps> = ({
                   setSelectedImage(nextItem);
                 }
               }}
-              className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 text-white bg-black/60 hover:bg-black/80 rounded-full p-2 transition-all duration-200 transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-white/50 z-10"
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.95 }}
+              transition={buttonTransition}
+              className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 text-white bg-black/60 hover:bg-black/80 rounded-full p-2 focus:outline-none focus:ring-2 focus:ring-white/50 z-10"
               aria-label="Next image"
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
               </svg>
-            </button>
+            </motion.button>
           )}
           
-          <button
+          <motion.button
             onClick={onClose}
-            className="absolute top-4 right-4 text-white bg-black/60 hover:bg-black/80 rounded-full p-2 transition-all duration-200 transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-white/50 z-10"
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.95 }}
+            transition={buttonTransition}
+            className="absolute top-4 right-4 text-white bg-black/60 hover:bg-black/80 rounded-full p-2 focus:outline-none focus:ring-2 focus:ring-white/50 z-10"
             aria-label="Close"
           >
             <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
-          </button>
+          </motion.button>
           
           {/* Pagination */}
           <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-2 z-10">

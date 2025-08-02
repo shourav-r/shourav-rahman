@@ -62,6 +62,24 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                // Set theme before the page renders to prevent flash
+                try {
+                  const theme = 'dark';
+                  document.documentElement.classList.add(theme);
+                  document.documentElement.style.colorScheme = theme;
+                  
+                  // Set initial colors to prevent flash
+                  document.documentElement.style.setProperty('--background', '0 0% 3.9%');
+                  document.documentElement.style.setProperty('--foreground', '0 0% 98%');
+                } catch (e) {}
+              })();
+            `,
+          }}
+        />
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
         <GlobalStyles />
       </head>
