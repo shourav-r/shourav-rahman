@@ -39,16 +39,21 @@ const ImagePopup: React.FC<ImagePopupProps> = ({
   const scrollToThumbnail = (index: number) => {
     const container = document.querySelector('.thumbnail-container') as HTMLElement | null;
     const thumb = document.querySelector(`.thumbnail-${index}`) as HTMLElement | null;
-    if (container && thumb) {
-      const containerRect = container.getBoundingClientRect();
-      const thumbRect = thumb.getBoundingClientRect();
-      const scrollLeft = thumb.offsetLeft - (containerRect.width / 2) + (thumbRect.width / 2);
-      
-      container.scrollTo({
-        left: scrollLeft,
-        behavior: 'smooth'
-      });
-    }
+    if (!container || !thumb) return;
+    
+    const containerRect = container.getBoundingClientRect();
+    const thumbRect = thumb.getBoundingClientRect();
+    const containerCenter = containerRect.left + containerRect.width / 2;
+    const thumbCenter = thumbRect.left + thumbRect.width / 2;
+    
+    // Calculate the scroll position needed to center the thumbnail
+    const scrollAmount = thumbCenter - containerCenter + container.scrollLeft;
+    
+    // Use smooth scroll for better UX
+    container.scrollTo({
+      left: scrollAmount,
+      behavior: 'smooth'
+    });
   };
 
   const handleTouchMove = (e: React.TouchEvent) => {
@@ -209,6 +214,16 @@ const ImagePopup: React.FC<ImagePopupProps> = ({
     ease: 'easeOut'
   };
 
+  // Scroll to active thumbnail
+  useEffect(() => {
+    if (item) {
+      const timer = setTimeout(() => {
+        scrollToThumbnail(currentIndex);
+      }, 100);
+      return () => clearTimeout(timer);
+    }
+  }, [currentIndex, item]);
+
   return (
     <AnimatePresence mode="wait">
       <motion.div
@@ -273,9 +288,9 @@ const ImagePopup: React.FC<ImagePopupProps> = ({
                 }
               }}
               whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.95 }}
-              transition={buttonTransition}
-              className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 text-white bg-black/60 hover:bg-black/80 rounded-full p-2 focus:outline-none focus:ring-2 focus:ring-white/50 z-10"
+              whileTap={{ scale: 0.9 }}
+              transition={{ type: 'spring', stiffness: 400, damping: 17 }}
+              className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 text-white bg-black/60 hover:bg-black/80 rounded-full p-3 focus:outline-none focus:ring-2 focus:ring-white/50 z-10"
               aria-label="Previous image"
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -295,9 +310,9 @@ const ImagePopup: React.FC<ImagePopupProps> = ({
                 }
               }}
               whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.95 }}
-              transition={buttonTransition}
-              className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 text-white bg-black/60 hover:bg-black/80 rounded-full p-2 focus:outline-none focus:ring-2 focus:ring-white/50 z-10"
+              whileTap={{ scale: 0.9 }}
+              transition={{ type: 'spring', stiffness: 400, damping: 17 }}
+              className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 text-white bg-black/60 hover:bg-black/80 rounded-full p-3 focus:outline-none focus:ring-2 focus:ring-white/50 z-10"
               aria-label="Next image"
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -319,16 +334,12 @@ const ImagePopup: React.FC<ImagePopupProps> = ({
             </svg>
           </motion.button>
           
-          {/* Mobile close button - bottom center */}
-          <motion.button
+          {/* Mobile close - tap anywhere outside image to close */}
+          <div 
+            className="md:hidden absolute inset-0 -z-10" 
             onClick={onClose}
-            whileTap={{ scale: 0.95 }}
-            transition={buttonTransition}
-            className="md:hidden absolute bottom-6 left-1/2 -translate-x-1/2 text-white bg-black/60 hover:bg-black/80 rounded-full px-6 py-2 focus:outline-none focus:ring-2 focus:ring-white/50 z-10 text-sm font-medium"
-            aria-label="Close"
-          >
-            Close
-          </motion.button>
+            aria-hidden="true"
+          />
           
           {/* Pagination */}
           <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-2 z-10">
