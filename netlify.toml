@@ -14,16 +14,26 @@
 [[plugins]]
   package = "@netlify/plugin-nextjs"
 
-# Handle client-side routing with fallback
+# Handle all requests - first try static files, then dynamic routes, then 404.html
 [[redirects]]
   from = "/*"
-  to = "/.netlify/functions/next"
+  to = "/index.html"
   status = 200
-  force = false
 
-# Required for Next.js API routes
+# Let Netlify handle Next.js internal routes
+[[redirects]]
+  from = "/_next/*"
+  to = "/_next/:splat"
+  status = 200
+
+# API routes
 [[redirects]]
   from = "/api/*"
   to = "/.netlify/functions/next"
   status = 200
-  force = true
+
+# Fallback for client-side routing
+[[redirects]]
+  from = "/*"
+  to = "/"
+  status = 200
