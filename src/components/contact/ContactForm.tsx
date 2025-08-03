@@ -157,7 +157,7 @@ export default function ContactForm() {
               whileHover="hover"
               variants={iconAnimation}
             >
-              <svg className="w-11 h-11" fill="currentColor" viewBox="0 0 24 24">
+              <svg className="w-11 h-11 text-black" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M12 2C6.477 2 2 6.145 2 11.259c0 2.913 1.454 5.512 3.726 7.21V22l3.405-1.869c.909.252 1.871.388 2.869.388 5.523 0 10-4.145 10-9.259C22 6.146 17.523 2 12 2zm1.008 12.445l-2.54-2.709-4.953 2.709 5.445-5.79 2.604 2.709 4.89-2.709-5.446 5.79z"/>
               </svg>
             </motion.a>
