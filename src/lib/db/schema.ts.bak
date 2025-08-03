@@ -1,0 +1,11 @@
+import { pgTable, serial, text, varchar } from 'drizzle-orm/pg-core'
+
+export const galleryItems = pgTable('gallery_items', {
+  id: serial('id').primaryKey(),
+  title: varchar('title', { length: 256 }).notNull(),
+  category: varchar('category', { length: 100 }).notNull(),
+  imageUrl: text('image_url').notNull(),
+  description: text('description'),
+  rowIndex: serial('row_index').notNull(), // To determine which row to display the item in
+  createdAt: timestamp('created_at').defaultNow(),
+})

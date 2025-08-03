@@ -1,0 +1,39 @@
+[build]
+  command = "npm run build"
+  publish = ".next"
+  functions = ".netlify/functions"
+
+[build.environment]
+  # Next.js environment variables
+  NEXT_TELEMETRY_DISABLED = "1"
+  
+  # Disable secrets scanning for public URLs
+  SECRETS_SCAN_ENABLED = "false"
+
+# Required for Next.js 13+ with server components
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
+# Handle all requests - first try static files, then dynamic routes, then 404.html
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# Let Netlify handle Next.js internal routes
+[[redirects]]
+  from = "/_next/*"
+  to = "/_next/:splat"
+  status = 200
+
+# API routes
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/next"
+  status = 200
+
+# Fallback for client-side routing
+[[redirects]]
+  from = "/*"
+  to = "/"
+  status = 200
