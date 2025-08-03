@@ -177,7 +177,7 @@ export default function AboutPage() {
                 ].map((skill, index) => (
                   <motion.div
                     key={skill}
-                    className="bg-secondary p-3 rounded-md hover:bg-primary/10 transition-colors border border-primary/20"
+                    className="bg-background p-3 rounded-md hover:bg-primary/10 transition-colors border border-border text-foreground"
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: index * 0.1 }}
