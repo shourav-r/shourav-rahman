@@ -262,50 +262,52 @@ const ImagePopup: React.FC<ImagePopupProps> = ({
             />
           </motion.div>
           
-          {/* Navigation Arrows */}
-          {currentIndex > 0 && (
-            <motion.button
-              onClick={(e) => {
-                e.stopPropagation();
-                const prevItem = galleryItems[currentIndex - 1];
-                if (prevItem) {
-                  setDirection(-1);
-                  setSelectedImage(prevItem);
-                }
-              }}
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.95 }}
-              transition={buttonTransition}
-              className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 text-white bg-black/60 hover:bg-black/80 rounded-full p-2 focus:outline-none focus:ring-2 focus:ring-white/50 z-10"
-              aria-label="Previous image"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-              </svg>
-            </motion.button>
-          )}
-          
-          {currentIndex < galleryItems.length - 1 && (
-            <motion.button
-              onClick={(e) => {
-                e.stopPropagation();
-                const nextItem = galleryItems[currentIndex + 1];
-                if (nextItem) {
-                  setDirection(1);
-                  setSelectedImage(nextItem);
-                }
-              }}
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.95 }}
-              transition={buttonTransition}
-              className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 text-white bg-black/60 hover:bg-black/80 rounded-full p-2 focus:outline-none focus:ring-2 focus:ring-white/50 z-10"
-              aria-label="Next image"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-              </svg>
-            </motion.button>
-          )}
+          {/* Navigation Arrows - Hidden on mobile */}
+          <div className="hidden md:block">
+            {currentIndex > 0 && (
+              <motion.button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  const prevItem = galleryItems[currentIndex - 1];
+                  if (prevItem) {
+                    setDirection(-1);
+                    setSelectedImage(prevItem);
+                  }
+                }}
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.95 }}
+                transition={buttonTransition}
+                className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 text-white bg-black/60 hover:bg-black/80 rounded-full p-2 focus:outline-none focus:ring-2 focus:ring-white/50 z-10"
+                aria-label="Previous image"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                </svg>
+              </motion.button>
+            )}
+            
+            {currentIndex < galleryItems.length - 1 && (
+              <motion.button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  const nextItem = galleryItems[currentIndex + 1];
+                  if (nextItem) {
+                    setDirection(1);
+                    setSelectedImage(nextItem);
+                  }
+                }}
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.95 }}
+                transition={buttonTransition}
+                className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 text-white bg-black/60 hover:bg-black/80 rounded-full p-2 focus:outline-none focus:ring-2 focus:ring-white/50 z-10"
+                aria-label="Next image"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </motion.button>
+            )}
+          </div>
           {/* Single close button that's always visible */}
           <motion.button
             onClick={onClose}

@@ -41,7 +41,7 @@ export default function Hero() {
           transition={{ duration: 0.8, delay: 0.2 }}
           className="space-y-6"
         >
-          <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold tracking-tight">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">
             <TypewriterText text="Shourav Rahman" />
           </h1>
 
@@ -49,7 +49,7 @@ export default function Hero() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.8, delay: 1.5 }}
-            className="text-lg sm:text-xl md:text-2xl font-normal text-muted-foreground space-y-2"
+            className="text-base sm:text-lg md:text-xl font-normal text-muted-foreground space-y-2"
           >
             <p className="leading-tight">What if art could do more than just exist?</p>
             <p className="leading-tight">I create visuals designed to act, persuade, and endure.</p>
