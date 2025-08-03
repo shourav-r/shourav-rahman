@@ -120,19 +120,19 @@ export default function AboutPage() {
               <div className="space-y-3 sm:space-y-4">
                 {[
                   {
-                    title: "Fine Arts Degree",
-                    year: "2018 - 2022",
-                    desc: "Specialized in Contemporary Art and Digital Media"
+                    title: "Bachelor of Fine Arts, Applied Art",
+                    year: "2019 - 2024",
+                    desc: "Institute of Fine Arts, University of Chittagong"
                   },
                   {
-                    title: "Digital Art Certification",
-                    year: "2020",
-                    desc: "Advanced Digital Illustration and Animation"
+                    title: "Transnational Responses Against Corruption and Kleptocracy",
+                    year: "2024",
+                    desc: "RUPSA. (November 12th-14th)"
                   },
                   {
-                    title: "Traditional Art Workshop",
-                    year: "2019",
-                    desc: "Watercolor and Oil Painting Techniques"
+                    title: "CAI QING'S EXPEDITION Dialogue with performance artists and curators",
+                    year: "2024",
+                    desc: "International workshop (May 9th -11th)"
                   }
                 ].map((edu, index) => (
                   <motion.div 
