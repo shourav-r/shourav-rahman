@@ -65,10 +65,10 @@ const ImagePopup: React.FC<ImagePopupProps> = ({
   const handleTouchEnd = () => {
     if (!touchStart || !touchEnd) return;
     
-    const diff = touchStart - touchEnd;
+    const diff = touchEnd - touchStart; // Inverted the calculation for more intuitive swipe
     const absDiff = Math.abs(diff);
-    const swipeThreshold = 20; // Reduced threshold for more responsive feel
-    const velocityThreshold = 0.2; // Lowered for more sensitive swipes
+    const swipeThreshold = 50; // Increased threshold for better intentional swipes
+    const velocityThreshold = 0.3; // Slightly increased for better control
     const timeDiff = performance.now() - touchTime.current;
     const velocity = absDiff / Math.max(timeDiff, 1);
     
@@ -77,25 +77,26 @@ const ImagePopup: React.FC<ImagePopupProps> = ({
       setTouchEnd(0);
     };
     
-    // Check for right-to-left swipe (next image)
-    if ((diff > swipeThreshold || velocity > velocityThreshold) && currentIndex < galleryItems.length - 1) {
-      const nextItem = galleryItems[currentIndex + 1];
-      if (nextItem) {
-        setDirection(1);
-        setSelectedImage(nextItem);
-        resetTouch(); // Reset immediately for faster response
-        return;
-      }
+    // Only trigger swipe if the movement is significant enough
+    if (absDiff < swipeThreshold && velocity < velocityThreshold) {
+      resetTouch();
+      return;
     }
     
-    // Check for left-to-right swipe (previous image)
-    if ((diff < -swipeThreshold || velocity > velocityThreshold) && currentIndex > 0) {
+    // Left-to-right swipe (previous image)
+    if (diff > 0 && currentIndex > 0) {
       const prevItem = galleryItems[currentIndex - 1];
       if (prevItem) {
         setDirection(-1);
         setSelectedImage(prevItem);
-        resetTouch(); // Reset immediately for faster response
-        return;
+      }
+    } 
+    // Right-to-left swipe (next image)
+    else if (diff < 0 && currentIndex < galleryItems.length - 1) {
+      const nextItem = galleryItems[currentIndex + 1];
+      if (nextItem) {
+        setDirection(1);
+        setSelectedImage(nextItem);
       }
     }
     
@@ -305,29 +306,26 @@ const ImagePopup: React.FC<ImagePopupProps> = ({
               </svg>
             </motion.button>
           )}
-          
-<motion.button
+          {/* Single close button that's always visible */}
+          <motion.button
             onClick={onClose}
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.95 }}
             transition={buttonTransition}
-            className="hidden md:block absolute top-4 right-4 text-white bg-black/60 hover:bg-black/80 rounded-full p-2 focus:outline-none focus:ring-2 focus:ring-white/50 z-10"
+            className="absolute top-4 right-4 text-white bg-black/60 hover:bg-black/80 rounded-full p-2 focus:outline-none focus:ring-2 focus:ring-white/50 z-10"
             aria-label="Close"
+            style={{
+              // Make it more visible on mobile
+              width: '2.5rem',
+              height: '2.5rem',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}
           >
             <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
-          </motion.button>
-          
-          {/* Mobile close button - bottom center */}
-          <motion.button
-            onClick={onClose}
-            whileTap={{ scale: 0.95 }}
-            transition={buttonTransition}
-            className="md:hidden absolute bottom-6 left-1/2 -translate-x-1/2 text-white bg-black/60 hover:bg-black/80 rounded-full px-6 py-2 focus:outline-none focus:ring-2 focus:ring-white/50 z-10 text-sm font-medium"
-            aria-label="Close"
-          >
-            Close
           </motion.button>
           
           {/* Pagination */}
