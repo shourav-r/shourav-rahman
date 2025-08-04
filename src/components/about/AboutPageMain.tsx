@@ -3,19 +3,7 @@
 import { motion } from 'framer-motion'
 import Image from 'next/image'
 
-const fadeIn = {
-  initial: { opacity: 0, y: 20 },
-  animate: { opacity: 1, y: 0 },
-  transition: { duration: 0.6 }
-}
-
-const staggerContainer = {
-  animate: {
-    transition: {
-      staggerChildren: 0.2
-    }
-  }
-}
+// Animation variants are now defined inline where they are used
 
 export default function AboutPage() {
   return (
@@ -65,14 +53,14 @@ export default function AboutPage() {
                   width={400}
                   height={400}
                   className="object-cover object-center w-full h-full"
-                  onLoad={(e) => {
+                  onLoad={() => {
                     // Hide initials when image loads successfully
                     const initials = document.getElementById('initials-fallback');
                     if (initials) initials.style.display = 'none';
                   }}
-                  onError={(e) => {
+                  onError={(event) => {
                     // Show initials if image fails to load
-                    const target = e.target as HTMLImageElement;
+                    const target = event.target as HTMLImageElement;
                     target.style.display = 'none';
                     const initials = document.getElementById('initials-fallback');
                     if (initials) initials.style.display = 'flex';
@@ -104,14 +92,15 @@ export default function AboutPage() {
           {/* Skills & Education */}
           <motion.div 
             className="grid grid-cols-1 md:grid-cols-2 gap-8 sm:gap-12 mb-16 md:mb-24"
-            variants={staggerContainer}
             initial="initial"
             animate="animate"
           >
             {/* Education Timeline */}
             <motion.div 
               className="space-y-6 sm:space-y-8"
-              variants={fadeIn}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
             >
               <h3 className="text-xl sm:text-2xl font-semibold mb-4 sm:mb-6 text-gradient">
                 Education & Training
@@ -151,14 +140,15 @@ export default function AboutPage() {
             </motion.div>
 
             {/* Skills */}
-            <motion.div variants={fadeIn}>
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+            >
               <h3 className="text-2xl font-semibold mb-6 text-gradient">
                 Artistic Skills
               </h3>
-              <motion.div 
-                className="grid grid-cols-2 gap-4"
-                variants={staggerContainer}
-              >
+              <div className="grid grid-cols-2 gap-4">
                 {[
                   'Digital Art',
                   'Character Design',
@@ -185,7 +175,7 @@ export default function AboutPage() {
                     <p className="font-medium text-foreground">{skill}</p>
                   </motion.div>
                 ))}
-              </motion.div>
+              </div>
             </motion.div>
           </motion.div>
 

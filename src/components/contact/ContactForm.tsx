@@ -61,29 +61,7 @@ const formAnimation = {
   }
 }
 
-const containerAnimation = {
-  initial: { opacity: 0 },
-  animate: { 
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.2,
-      delayChildren: 0.3
-    }
-  }
-}
-
-const inputAnimation = {
-  initial: { x: -20, opacity: 0 },
-  animate: { 
-    x: 0, 
-    opacity: 1,
-    transition: {
-      type: "spring",
-      stiffness: 100,
-      damping: 10
-    }
-  }
-}
+// Animation variants moved to where they are used directly
 
 export default function ContactForm() {
   const [formData, setFormData] = useState({
