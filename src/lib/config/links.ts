@@ -24,24 +24,52 @@ export const navigationLinks = [
 
 export const socialLinks = [
   {
+    name: 'Dribbble',
+    href: 'https://dribbble.com/bald-cape',
+    icon: 'Dribbble',
+    gradient: 'from-pink-500 to-purple-600',
+    external: true
+  },
+  {
+    name: 'Behance',
+    href: 'https://www.behance.net/baldcape',
+    icon: 'Behance',
+    gradient: 'from-blue-600 to-blue-800',
+    external: true
+  },
+  {
+    name: 'Twitter',
+    href: 'https://x.com/shouravrahman12',
+    icon: 'Twitter',
+    gradient: 'from-black to-gray-700',
+    external: true
+  },
+  {
     name: 'Instagram',
-    href: 'https://instagram.com/shourav_rahman_official',
+    href: 'https://www.instagram.com/baldcape/',
     icon: 'Instagram',
     gradient: 'from-pink-500 via-purple-500 to-blue-500',
     external: true
   },
   {
-    name: 'LinkedIn',
-    href: 'https://linkedin.com/in/shourav-rahman',
-    icon: 'Linkedin',
-    gradient: 'from-blue-700 to-blue-500',
+    name: 'Facebook',
+    href: 'https://m.facebook.com/therealbaldcape/',
+    icon: 'Facebook',
+    gradient: 'from-blue-600 to-blue-800',
     external: true
   },
   {
-    name: 'YouTube',
-    href: 'https://youtube.com/@shouravrahman',
-    icon: 'Youtube',
-    gradient: 'from-red-700 to-red-500',
+    name: 'Facebook Page',
+    href: 'https://m.facebook.com/roll0001/',
+    icon: 'Facebook',
+    gradient: 'from-blue-700 to-blue-900',
+    external: true
+  },
+  {
+    name: 'WhatsApp',
+    href: 'https://wa.me/qr/D2ITBHLVB377A1',
+    icon: 'MessageCircle',
+    gradient: 'from-green-500 to-green-700',
     external: true
   }
 ]
