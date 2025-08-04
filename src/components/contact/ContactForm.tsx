@@ -305,11 +305,10 @@ export default function ContactForm() {
                 social.name === 'WhatsApp'
               )
               .map((social) => {
-                const IconComponent = getIconComponent(social.icon)
-                if (!IconComponent) return null
-                
-                // Special case for Messenger - use Facebook Messenger icon
                 const isMessenger = social.name === 'Facebook';
+                const isDribbble = social.name === 'Dribbble';
+                const isBehance = social.name === 'Behance';
+                
                 const iconClass = `w-6 h-6 group-hover:scale-110 transition-transform ${
                   isMessenger ? 'text-[#0084FF]' : ''
                 }`;
@@ -333,6 +332,18 @@ export default function ContactForm() {
                       >
                         <path d="M12 2C6.36 2 2 6.13 2 11.7c0 2.91 1.19 5.44 3.14 7.17.16.13.26.35.27.57l.05 1.78c.04.57.61.94 1.13.71l1.98-.87c.17-.06.36-.09.53-.06.9.27 1.82.4 2.8.4 5.64 0 10.1-4.13 10.1-9.7C22 6.13 17.64 2 12 2zm6 12.2l-1.77-1.76-5.13 2.58c-.4.2-.86.2-1.16-.02L6 12.5v-1.7c0-.24.1-.46.27-.62l1.93-1.87c.2-.2.51-.23.76-.07l4.22 2.5 1.28-.64c.2-.1.43-.1.63 0l2.38 1.19c.2.1.26.3.1.44l-.08.08z"/>
                       </svg>
+                    ) : isDribbble ? (
+                      <img 
+                        src="/images/dribbble-logo.png" 
+                        alt="Dribbble" 
+                        className={iconClass}
+                      />
+                    ) : isBehance ? (
+                      <img 
+                        src="/images/behance-logo.png" 
+                        alt="Behance" 
+                        className={iconClass}
+                      />
                     ) : (
                       <IconComponent className={iconClass} />
                     )}
