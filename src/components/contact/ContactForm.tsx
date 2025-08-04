@@ -2,6 +2,8 @@
 
 import { motion } from 'framer-motion'
 import { useState } from 'react'
+import { socialLinks } from '@/lib/config/links'
+import { getIconComponent } from '@/components/layout/Header'
 
 const fadeIn = {
   initial: { opacity: 0, y: 20 },
@@ -307,6 +309,37 @@ export default function ContactForm() {
           <p className="mt-3 text-sm text-muted-foreground text-center sm:text-left">
             I'll get back to you within 24 hours
           </p>
+        </motion.div>
+
+        {/* Social Media Links */}
+        <motion.div 
+          className="mt-12 text-center"
+          variants={fadeIn}
+        >
+          <p className="text-sm text-muted-foreground mb-4">Or connect with me on social media</p>
+          <div className="flex justify-center gap-4">
+            {socialLinks.map((social) => {
+              const IconComponent = getIconComponent(social.icon)
+              if (!IconComponent) return null
+              
+              return (
+                <motion.a
+                  key={social.name}
+                  href={social.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`p-2 rounded-full hover:bg-foreground/5 transition-colors group`}
+                  aria-label={social.name}
+                  whileHover={{ y: -3 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <IconComponent 
+                    className={`w-6 h-6 group-hover:scale-110 transition-transform`}
+                  />
+                </motion.a>
+              )
+            })}
+          </div>
         </motion.div>
       </motion.form>
     </div>

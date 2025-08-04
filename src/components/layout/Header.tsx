@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { Instagram, Youtube, Linkedin, X, Menu } from 'lucide-react'
+import { Instagram, Youtube, Linkedin, X, Menu, MessageCircle } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { usePathname } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -9,7 +9,7 @@ import { navigationLinks, socialLinks } from '@/lib/config/links'
 import { Button } from '@/components/ui/button'
 
 // Helper function to get icon component by name
-const getIconComponent = (iconName: string) => {
+export const getIconComponent = (iconName: string) => {
   switch (iconName) {
     case 'Instagram':
       return Instagram
@@ -17,6 +17,30 @@ const getIconComponent = (iconName: string) => {
       return Linkedin
     case 'Youtube':
       return Youtube
+    case 'Twitter':
+      return X
+    case 'Dribbble':
+      return ({ className }: { className?: string }) => (
+        <svg className={className} viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 0C5.37 0 0 5.37 0 12s5.37 12 12 12 12-5.37 12-12S18.63 0 12 0zm9.8 12c0 4.31-3.49 7.8-7.8 7.8S4.2 16.31 4.2 12 7.69 4.2 12 4.2s7.8 3.49 7.8 7.8z"/>
+          <path d="M12 6.6c-3.09 0-5.4 2.31-5.4 5.4s2.31 5.4 5.4 5.4 5.4-2.31 5.4-5.4-2.31-5.4-5.4-5.4zm0 9.6c-2.31 0-4.2-1.89-4.2-4.2S9.69 7.8 12 7.8s4.2 1.89 4.2 4.2-1.89 4.2-4.2 4.2z"/>
+          <path d="M16.8 7.2c-.66 0-1.2.54-1.2 1.2s.54 1.2 1.2 1.2 1.2-.54 1.2-1.2-.54-1.2-1.2-1.2z"/>
+        </svg>
+      )
+    case 'Behance':
+      return ({ className }: { className?: string }) => (
+        <svg className={className} viewBox="0 0 24 24" fill="currentColor">
+          <path d="M22 7h-7v-2h7v2zm1.77 5.77a7.46 7.46 0 01-1.55 4.64 7.4 7.4 0 01-6.06 3.08H0V7h10.5c2.64 0 4.5 1.36 4.5 3.32 0 1.96-1.86 3.22-4.5 3.22 2.4 0 3.96 1.9 3.96 4.26 0 2.1-1.56 4.2-4.2 4.2H6v-8.28h10.5c1.14 0 1.98.61 2.24 1.55zM6 10.8v2.7h2.7c.9 0 1.5-.6 1.5-1.35 0-.75-.6-1.35-1.5-1.35H6zm3.6 7.2H6v-2.7h3.6c.9 0 1.5.6 1.5 1.35s-.6 1.35-1.5 1.35z"/>
+        </svg>
+      )
+    case 'Facebook':
+      return ({ className }: { className?: string }) => (
+        <svg className={className} viewBox="0 0 24 24" fill="currentColor">
+          <path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95c5.05-.5 9-4.76 9-9.95z"/>
+        </svg>
+      )
+    case 'MessageCircle':
+      return MessageCircle
     default:
       return null
   }
