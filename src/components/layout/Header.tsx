@@ -121,38 +121,31 @@ export default function Header() {
 
           {/* Right side - Theme toggle and mobile menu */}
           <div className="flex items-center space-x-4 w-32 justify-end"> {/* Add fixed width to balance the left side */}
-            {/* Social Icons */}
-            <div className="hidden md:flex items-center space-x-4 relative">
-              {socialLinks.map((social) => {
-                const IconComponent = getIconComponent(social.icon)
-                if (!IconComponent) return null
-                
-                return (
-                  <Link 
-                    key={social.name}
-                    href={social.href} 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="p-2 text-foreground/60 hover:text-foreground transition-colors"
-                  >
-                    {social.name === 'Youtube' ? (
-                      <motion.div
-                        animate={{ rotate: 360 }}
-                        transition={{ 
-                          duration: 1,
-                          repeat: Infinity,
-                          repeatDelay: 5,
-                          delay: 1
-                        }}
-                      >
-                        <IconComponent size={24} />
-                      </motion.div>
-                    ) : (
-                      <IconComponent size={20} />
-                    )}
-                  </Link>
+            {/* Social Icons - Only Instagram, Dribbble, and Behance */}
+            <div className="hidden md:flex items-center space-x-2">
+              {socialLinks
+                .filter(social => 
+                  social.name === 'Instagram' || 
+                  social.name === 'Dribbble' || 
+                  social.name === 'Behance'
                 )
-              })}
+                .map((social) => {
+                  const IconComponent = getIconComponent(social.icon)
+                  if (!IconComponent) return null
+                  
+                  return (
+                    <Link 
+                      key={social.name}
+                      href={social.href} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="p-1.5 hover:bg-foreground/5 rounded-full transition-colors"
+                      aria-label={social.name}
+                    >
+                      <IconComponent className="w-5 h-5 text-foreground/80 hover:text-foreground transition-colors" />
+                    </Link>
+                  )
+                })}
             </div>
             <Button
               variant="ghost"
@@ -192,23 +185,30 @@ export default function Header() {
                   </Link>
                 </li>
               ))}
-              <div className="flex items-center justify-between pt-4">
+              <div className="pt-4">
                 {/* Mobile Social Icons */}
-                <div className="flex space-x-4">
-                  {socialLinks.map((social) => {
-                    const IconComponent = getIconComponent(social.icon)
-                    if (!IconComponent) return null
+                <div className="flex justify-center space-x-6 pt-2">
+                  {socialLinks
+                    .filter(social => 
+                      social.name === 'Instagram' || 
+                      social.name === 'Dribbble' || 
+                      social.name === 'Behance'
+                    )
+                    .map((social) => {
+                      const IconComponent = getIconComponent(social.icon)
+                      if (!IconComponent) return null
                     
                     return (
-                      <Link 
+                      <Link
                         key={social.name}
-                        href={social.href} 
-                        target="_blank" 
+                        href={social.href}
+                        target="_blank"
                         rel="noopener noreferrer"
+                        className="p-2 hover:bg-foreground/5 rounded-full transition-colors"
                         onClick={handleMenuItemClick}
-                        className="hover:text-primary transition-colors"
+                        aria-label={social.name}
                       >
-                        <IconComponent size={24} />
+                        <IconComponent className="w-6 h-6 text-foreground/80" />
                       </Link>
                     )
                   })}
