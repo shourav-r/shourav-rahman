@@ -95,7 +95,7 @@ export default function ContactForm() {
   }
 
   return (
-    <div className="w-full contact-form px-4 sm:px-6 py-8 sm:py-12">
+    <div className="w-full bg-background px-4 sm:px-6 py-8 sm:py-12">
       {/* Social Media Section */}
       <motion.div 
         className="max-w-2xl mx-auto text-center mb-8 sm:mb-12"
@@ -145,7 +145,7 @@ export default function ContactForm() {
       {/* Contact Form */}
       <motion.form 
         onSubmit={handleSubmit} 
-        className="max-w-2xl mx-auto w-full text-foreground bg-background/30 dark:bg-background/50 backdrop-blur-sm rounded-2xl p-6 sm:p-8 shadow-lg"
+        className="max-w-2xl mx-auto w-full text-foreground bg-background/95 dark:bg-background/95 rounded-2xl p-6 sm:p-8 shadow-lg border border-border/50"
         variants={staggerContainer}
         initial="initial"
         animate="animate"
