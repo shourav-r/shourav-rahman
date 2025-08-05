@@ -10,13 +10,9 @@ import { cn } from '@/lib/utils'
 import SocialIcons from '@/components/ui/SocialIcons'
 import { Button } from '@/components/ui/button'
 
-
-
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const pathname = usePathname()
-
-
 
   // Close mobile menu when clicking on a link
   const handleMenuItemClick = () => {
@@ -54,7 +50,7 @@ export default function Header() {
       <nav className="container mx-auto rounded-2xl bg-background/30 backdrop-blur-lg p-4">
         <div className="flex justify-between items-center">
           {/* Left side - Logo */}
-          <div className="w-32"> {/* Add fixed width to balance the right side */}
+          <div className="w-32">
             <Link href="/" className="text-2xl font-bold">SR</Link>
           </div>
 
@@ -76,10 +72,10 @@ export default function Header() {
             ))}
           </ul>
 
-          {/* Right side - Theme toggle and mobile menu */}
-          <div className="flex items-center space-x-4 w-32 justify-end"> {/* Add fixed width to balance the left side */}
-            {/* Social media links in header */}
-            <div className="flex items-center gap-2">
+          {/* Right side - Social icons (hidden on mobile) and menu button */}
+          <div className="flex items-center space-x-4 w-32 justify-end">
+            {/* Social media links in header - hidden on mobile */}
+            <div className="hidden md:flex items-center gap-2">
               {socialLinks
                 .filter(social => 
                   social.name === 'Instagram' || 
@@ -99,45 +95,56 @@ export default function Header() {
                   </Link>
                 ))}
             </div>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="md:hidden"
+
+            {/* Mobile menu button */}
+            <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className="md:hidden p-2 rounded-full hover:bg-foreground/5 transition-colors"
               aria-label="Toggle menu"
             >
               {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
-            </Button>
+            </button>
           </div>
         </div>
 
         {/* Mobile Menu */}
         <AnimatePresence>
           {isMenuOpen && (
-            <motion.div 
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.2 }}
-              className="fixed inset-x-0 top-16 z-50 bg-background/95 backdrop-blur-sm p-4 border-b shadow-lg md:hidden"
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.3, ease: 'easeInOut' }}
+              className="md:hidden overflow-hidden"
             >
-              <div className="flex flex-col space-y-4">
-                {navigationLinks.map((link) => (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    className={cn(
-                      'px-4 py-2 text-lg font-medium transition-colors hover:text-primary',
-                      pathname === link.href ? 'text-primary' : 'text-foreground/70'
-                    )}
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    {link.name}
-                  </Link>
-                ))}
-                <div className="pt-4 border-t border-border">
-                  <p className="px-4 pb-2 text-sm font-medium text-foreground/70">Follow me</p>
-                  <div className="flex space-x-4 px-4">
+              <div className="space-y-6 py-4">
+                <ul className="space-y-4">
+                  {navigationLinks.map((link) => (
+                    <motion.li
+                      key={link.name}
+                      initial={{ x: -20, opacity: 0 }}
+                      animate={{ x: 0, opacity: 1 }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      <Link
+                        href={link.href}
+                        onClick={handleMenuItemClick}
+                        className={`block py-2 px-4 rounded-lg transition-colors ${
+                          pathname === link.href
+                            ? 'bg-foreground/10 text-foreground'
+                            : 'text-foreground/70 hover:bg-foreground/5'
+                        }`}
+                      >
+                        {link.name}
+                      </Link>
+                    </motion.li>
+                  ))}
+                </ul>
+                
+                {/* Social Icons in Mobile Menu */}
+                <div className="pt-4 border-t border-foreground/10">
+                  <p className="px-4 text-sm text-foreground/60 mb-3">Connect with me</p>
+                  <div className="flex items-center gap-4 px-4">
                     {socialLinks
                       .filter(social => 
                         social.name === 'Instagram' || 
@@ -152,8 +159,9 @@ export default function Header() {
                           rel="noopener noreferrer"
                           className="p-2 rounded-full hover:bg-foreground/5 transition-colors group"
                           aria-label={social.name}
+                          onClick={handleMenuItemClick}
                         >
-                          <SocialIcons name={social.name} className="w-5 h-5 group-hover:scale-110 transition-transform" />
+                          <SocialIcons name={social.name} className="w-6 h-6 group-hover:scale-110 transition-transform" />
                         </Link>
                       ))}
                   </div>
