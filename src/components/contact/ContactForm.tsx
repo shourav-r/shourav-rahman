@@ -95,7 +95,7 @@ export default function ContactForm() {
   }
 
   return (
-    <div className="w-full contact-form">
+    <div className="w-full contact-form bg-background dark:bg-background">
       {/* Social Media Section */}
       <motion.div 
         className="max-w-2xl mx-auto text-center mb-8 sm:mb-12"
