@@ -7,21 +7,42 @@ export default function AboutPage() {
   // Updated to fix special characters and trigger Netlify build
   return (
     <div>
-      <section className="py-12 sm:py-16 md:py-20">
+      <section className="py-16 sm:py-20 md:py-24">
         <div className="container mx-auto px-4 sm:px-6">
           {/* Header Section */}
           <motion.div 
-            className="text-center mb-10 sm:mb-16"
-            initial={{ opacity: 0, y: 30 }}
+            className="text-center mb-12 sm:mb-20"
+            initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
+            transition={{ 
+              duration: 0.8,
+              ease: [0.2, 0.8, 0.2, 1],
+              delay: 0.2
+            }}
           >
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold pt-8 mb-4 sm:mb-6 text-gradient">
-              About Me
-            </h1>
-            <p className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto px-2">
-              A journey through art, creativity, and continuous learning
-            </p>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+            >
+              <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold pt-16 pb-4 sm:pb-6 text-gradient bg-clip-text">
+                About Me
+              </h1>
+              <motion.div 
+                className="w-20 h-1 bg-gradient-to-r from-primary to-secondary mx-auto mb-6 rounded-full"
+                initial={{ scaleX: 0 }}
+                animate={{ scaleX: 1 }}
+                transition={{ delay: 0.6, duration: 0.8, ease: "easeOut" }}
+              />
+              <motion.p 
+                className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto px-2"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.8, duration: 0.6 }}
+              >
+                A journey through art, creativity, and continuous learning
+              </motion.p>
+            </motion.div>
           </motion.div>
 
           {/* Main Content */}
