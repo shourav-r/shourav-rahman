@@ -130,7 +130,7 @@ export default function AboutPage() {
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: index * 0.2 }}
                   >
-                    <div class="absolute inset-0 bg-gradient-to-r from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div><h4 class="font-semibold relative z-10">{edu.title}</h4><p class="text-sm text-muted-foreground relative z-10">{edu.year}</p><p class="mt-2 relative z-10">{edu.desc}</p>
+                    <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div><h4 className="font-semibold relative z-10">{edu.title}</h4><p className="text-sm text-muted-foreground relative z-10">{edu.year}</p><p className="mt-2 relative z-10">{edu.desc}</p>
                   </motion.div>
                 ))}
               </div>
