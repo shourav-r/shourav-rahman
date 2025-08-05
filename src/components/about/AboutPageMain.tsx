@@ -4,6 +4,7 @@ import { motion } from 'framer-motion'
 import Image from 'next/image'
 
 export default function AboutPage() {
+  // Updated to fix special characters and trigger Netlify build
   return (
     <div>
       <section className="py-12 sm:py-16 md:py-20">
