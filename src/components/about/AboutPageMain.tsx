@@ -16,7 +16,7 @@ export default function AboutPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 sm:mb-6 text-gradient">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold pt-8 mb-4 sm:mb-6 text-gradient">
               About Me
             </h1>
             <p className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto px-2">
