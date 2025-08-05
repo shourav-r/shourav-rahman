@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { socialLinks } from '@/lib/config/links'
-import { getIconComponent } from './Header'
+import SocialIcons from '@/components/ui/SocialIcons'
 
 export default function Footer() {
   return (
@@ -11,25 +11,21 @@ export default function Footer() {
         <div className="flex flex-col items-center">
           {/* Social Icons */}
           <div className="flex flex-wrap justify-center gap-6 mb-6">
-            {socialLinks.map((social) => {
-              const IconComponent = getIconComponent(social.icon)
-              if (!IconComponent) return null
-              
-              return (
-                <Link
-                  key={social.name}
-                  href={social.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={`p-2 rounded-full hover:bg-foreground/5 transition-colors group`}
-                  aria-label={social.name}
-                >
-                  <IconComponent 
-                    className={`w-6 h-6 group-hover:scale-110 transition-transform`}
-                  />
-                </Link>
-              )
-            })}
+            {socialLinks.map((social) => (
+              <Link
+                key={social.name}
+                href={social.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-2 rounded-full hover:bg-foreground/5 transition-colors group"
+                aria-label={social.name}
+              >
+                <SocialIcons 
+                  name={social.name}
+                  className="w-6 h-6 group-hover:scale-110 transition-transform"
+                />
+              </Link>
+            ))}
           </div>
           
           {/* Copyright */}

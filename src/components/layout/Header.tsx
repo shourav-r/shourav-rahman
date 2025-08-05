@@ -1,61 +1,16 @@
 'use client'
 
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { Instagram, Youtube, Linkedin, X, Menu, MessageCircle } from 'lucide-react'
-import { useEffect, useState } from 'react'
 import { usePathname } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
+import { Menu, X, MessageCircle } from 'lucide-react'
 import { navigationLinks, socialLinks } from '@/lib/config/links'
+import { cn } from '@/lib/utils'
+import SocialIcons from '@/components/ui/SocialIcons'
 import { Button } from '@/components/ui/button'
 
-// Helper function to get icon component by name
-export const getIconComponent = (iconName: string) => {
-  switch (iconName) {
-    case 'Instagram':
-      return Instagram
-    case 'Linkedin':
-      return Linkedin
-    case 'Youtube':
-      return Youtube
-    case 'Twitter':
-      return X
-    case 'Dribbble': {
-      const DribbbleIcon = ({ className }: { className?: string }) => (
-        <img 
-          src="/images/dribbble-logo.png" 
-          alt="Dribbble" 
-          className={`w-6 h-6 ${className || ''}`}
-        />
-      )
-      DribbbleIcon.displayName = 'DribbbleIcon';
-      return DribbbleIcon;
-    }
-    case 'Behance': {
-      const BehanceIcon = ({ className }: { className?: string }) => (
-        <img 
-          src="/images/behance-logo.png" 
-          alt="Behance" 
-          className={`w-6 h-6 ${className || ''}`}
-        />
-      )
-      BehanceIcon.displayName = 'BehanceIcon';
-      return BehanceIcon;
-    }
-    case 'Facebook': {
-      const FacebookIcon = ({ className }: { className?: string }) => (
-        <svg className={className} viewBox="0 0 24 24" fill="currentColor">
-          <path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95c5.05-.5 9-4.76 9-9.95z"/>
-        </svg>
-      )
-      FacebookIcon.displayName = 'FacebookIcon';
-      return FacebookIcon;
-    }
-    case 'MessageCircle':
-      return MessageCircle
-    default:
-      return null
-  }
-}
+
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -123,31 +78,26 @@ export default function Header() {
 
           {/* Right side - Theme toggle and mobile menu */}
           <div className="flex items-center space-x-4 w-32 justify-end"> {/* Add fixed width to balance the left side */}
-            {/* Social Icons - Only Instagram, Dribbble, and Behance */}
-            <div className="hidden md:flex items-center space-x-2">
+            {/* Social media links in header */}
+            <div className="flex items-center gap-2">
               {socialLinks
                 .filter(social => 
                   social.name === 'Instagram' || 
                   social.name === 'Dribbble' || 
                   social.name === 'Behance'
                 )
-                .map((social) => {
-                  const IconComponent = getIconComponent(social.icon)
-                  if (!IconComponent) return null
-                  
-                  return (
-                    <Link 
-                      key={social.name}
-                      href={social.href} 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="p-1.5 hover:bg-foreground/5 rounded-full transition-colors"
-                      aria-label={social.name}
-                    >
-                      <IconComponent className="w-5 h-5 text-foreground/80 hover:text-foreground transition-colors" />
-                    </Link>
-                  )
-                })}
+                .map((social) => (
+                  <Link
+                    key={social.name}
+                    href={social.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="p-2 rounded-full hover:bg-foreground/5 transition-colors group"
+                    aria-label={social.name}
+                  >
+                    <SocialIcons name={social.name} className="w-5 h-5 group-hover:scale-110 transition-transform" />
+                  </Link>
+                ))}
             </div>
             <Button
               variant="ghost"
@@ -165,60 +115,50 @@ export default function Header() {
         <AnimatePresence>
           {isMenuOpen && (
             <motion.div 
-              className="md:hidden mt-4 pb-2"
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
-              exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.3, ease: 'easeInOut' }}
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.2 }}
+              className="fixed inset-x-0 top-16 z-50 bg-background/95 backdrop-blur-sm p-4 border-b shadow-lg md:hidden"
             >
-              <ul className="flex flex-col space-y-6">
-              {navigationLinks.map((link) => (
-                <li key={link.name}>
-                  <Link 
+              <div className="flex flex-col space-y-4">
+                {navigationLinks.map((link) => (
+                  <Link
+                    key={link.href}
                     href={link.href}
-                    onClick={handleMenuItemClick}
-                    className={`relative transition-colors pb-2 font-bold ${
-                      pathname === link.href
-                        ? 'border-b-2 text-foreground border-zinc-100' 
-                        : 'text-foreground/60 hover:text-foreground'
-                    }`}
+                    className={cn(
+                      'px-4 py-2 text-lg font-medium transition-colors hover:text-primary',
+                      pathname === link.href ? 'text-primary' : 'text-foreground/70'
+                    )}
+                    onClick={() => setIsMenuOpen(false)}
                   >
                     {link.name}
                   </Link>
-                </li>
-              ))}
-              <div className="pt-4">
-                {/* Mobile Social Icons */}
-                <div className="flex justify-center space-x-6 pt-2">
-                  {socialLinks
-                    .filter(social => 
-                      social.name === 'Instagram' || 
-                      social.name === 'Dribbble' || 
-                      social.name === 'Behance'
-                    )
-                    .map((social) => {
-                      const IconComponent = getIconComponent(social.icon)
-                      if (!IconComponent) return null
-                    
-                    return (
-                      <Link
-                        key={social.name}
-                        href={social.href}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="p-2 hover:bg-foreground/5 rounded-full transition-colors"
-                        onClick={handleMenuItemClick}
-                        aria-label={social.name}
-                      >
-                        <IconComponent className="w-6 h-6 text-foreground/80" />
-                      </Link>
-                    )
-                  })}
+                ))}
+                <div className="pt-4 border-t border-border">
+                  <p className="px-4 pb-2 text-sm font-medium text-foreground/70">Follow me</p>
+                  <div className="flex space-x-4 px-4">
+                    {socialLinks
+                      .filter(social => 
+                        social.name === 'Instagram' || 
+                        social.name === 'Dribbble' || 
+                        social.name === 'Behance'
+                      )
+                      .map((social) => (
+                        <Link
+                          key={social.name}
+                          href={social.href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="p-2 rounded-full hover:bg-foreground/5 transition-colors group"
+                          aria-label={social.name}
+                        >
+                          <SocialIcons name={social.name} className="w-5 h-5 group-hover:scale-110 transition-transform" />
+                        </Link>
+                      ))}
+                  </div>
                 </div>
-                
-
               </div>
-            </ul>
             </motion.div>
           )}
         </AnimatePresence>

@@ -53,16 +53,9 @@ export const socialLinks = [
   },
   {
     name: 'Facebook',
-    href: 'https://m.facebook.com/therealbaldcape/',
-    icon: 'Facebook',
-    gradient: 'from-blue-600 to-blue-800',
-    external: true
-  },
-  {
-    name: 'Facebook Page',
     href: 'https://m.facebook.com/roll0001/',
     icon: 'Facebook',
-    gradient: 'from-blue-700 to-blue-900',
+    gradient: 'from-blue-600 to-blue-800',
     external: true
   },
   {
@@ -70,6 +63,20 @@ export const socialLinks = [
     href: 'https://wa.me/qr/D2ITBHLVB377A1',
     icon: 'MessageCircle',
     gradient: 'from-green-500 to-green-700',
+    external: true
+  },
+  {
+    name: 'LinkedIn',
+    href: 'https://www.linkedin.com/in/shourav-rahman',
+    icon: 'LinkedIn',
+    gradient: 'from-blue-600 to-blue-800',
+    external: true
+  },
+  {
+    name: 'Messenger',
+    href: 'https://m.me/roll0001',
+    icon: 'Messenger',
+    gradient: 'from-blue-500 to-purple-600',
     external: true
   }
 ]
