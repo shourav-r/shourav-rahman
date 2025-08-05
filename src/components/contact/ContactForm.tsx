@@ -96,7 +96,7 @@ export default function ContactForm() {
               name="name"
               value={formData.name}
               onChange={handleChange}
-              className=\"w-full px-4 py-2 rounded-md border border-border/50 bg-background/50 text-black focus:ring-2 focus:ring-primary focus:border-transparent placeholder:text-foreground/50\"
+              className="w-full px-4 py-2 rounded-md border border-border/50 bg-background/50 text-black focus:ring-2 focus:ring-primary focus:border-transparent placeholder:text-foreground/50"
               required
             />
           </div>
@@ -109,7 +109,7 @@ export default function ContactForm() {
               name="email"
               value={formData.email}
               onChange={handleChange}
-              className=\"w-full px-4 py-2 rounded-md border border-border/50 bg-background/50 text-black focus:ring-2 focus:ring-primary focus:border-transparent placeholder:text-foreground/50\"
+              className="w-full px-4 py-2 rounded-md border border-border/50 bg-background/50 text-black focus:ring-2 focus:ring-primary focus:border-transparent placeholder:text-foreground/50"
               required
             />
           </div>
@@ -122,7 +122,7 @@ export default function ContactForm() {
               rows={4}
               value={formData.message}
               onChange={handleChange}
-              className=\"w-full px-4 py-2 rounded-md border border-border/50 bg-background/50 text-black focus:ring-2 focus:ring-primary focus:border-transparent placeholder:text-foreground/50\"
+              className="w-full px-4 py-2 rounded-md border border-border/50 bg-background/50 text-black focus:ring-2 focus:ring-primary focus:border-transparent placeholder:text-foreground/50"
               required
             />
           </div>
