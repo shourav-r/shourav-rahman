@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { motion } from 'framer-motion'
 import Image from 'next/image'
@@ -187,7 +187,7 @@ export default function AboutPage() {
               Artist Statement
             </h3>
             <p className="text-muted-foreground leading-relaxed">
-            I believe the medium must serve the message. My work begins with a core idea, selecting the perfect tool—brush, stylus, or camera—to create clear, resonant visual forms.
+            I believe the medium must serve the message. My work begins with a core idea, selecting the perfect toolâ€”brush, stylus, or cameraâ€”to create clear, resonant visual forms.
             </p>
           </motion.div>
         </div>
