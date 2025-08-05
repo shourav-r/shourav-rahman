@@ -7,8 +7,7 @@ import Image from 'next/image'
 
 export default function AboutPage() {
   return (
-    <div className="min-h-screen">
-      <section className="py-8 sm:py-12">
+    <div>\n      <section className="py-12 sm:py-16 md:py-20">
         <div className="container mx-auto px-4 sm:px-6">
           {/* Header Section */}
           <motion.div 
@@ -126,14 +125,12 @@ export default function AboutPage() {
                 ].map((edu, index) => (
                   <motion.div 
                     key={edu.title}
-                    className="border-l-2 border-primary pl-4 py-2 hover:bg-secondary/50 rounded-r transition-colors"
+                    className="group relative border-l-2 border-primary pl-4 py-3 pr-4 rounded-r-lg transition-all duration-300 overflow-hidden hover:shadow-md"
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: index * 0.2 }}
                   >
-                    <h4 className="font-semibold">{edu.title}</h4>
-                    <p className="text-sm text-muted-foreground">{edu.year}</p>
-                    <p className="mt-2">{edu.desc}</p>
+                    <div class="absolute inset-0 bg-gradient-to-r from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div><h4 class="font-semibold relative z-10">{edu.title}</h4><p class="text-sm text-muted-foreground relative z-10">{edu.year}</p><p class="mt-2 relative z-10">{edu.desc}</p>
                   </motion.div>
                 ))}
               </div>
@@ -198,3 +195,4 @@ export default function AboutPage() {
     </div>
   )
 }
+
