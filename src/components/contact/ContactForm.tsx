@@ -47,11 +47,11 @@ export default function ContactForm() {
   }
 
   return (
-    <div className="w-full py-12 px-4 sm:px-6 text-foreground">
+    <div className="w-full py-12 px-4 sm:px-6 text-black">
       {/* Social Media Section */}
       <div className="max-w-2xl mx-auto text-center mb-12">
         <motion.h2 
-          className="text-2xl font-bold mb-6 text-foreground"
+          className="text-2xl font-bold mb-6 text-black"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
         >
@@ -65,7 +65,7 @@ export default function ContactForm() {
               href={social.href}
               target="_blank"
               rel="noopener noreferrer"
-              className="p-2 text-foreground/80 hover:text-primary transition-colors"
+              className="p-2 text-black/80 hover:text-primary transition-colors"
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}
@@ -85,44 +85,44 @@ export default function ContactForm() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2 }}
       >
-        <h3 className="text-xl font-semibold mb-6 text-center text-foreground">Or Drop A Message</h3>
+        <h3 className="text-xl font-semibold mb-6 text-center text-black">Or Drop A Message</h3>
         
         <div className="space-y-4">
           <div>
-            <label htmlFor="name" className="block text-sm font-medium mb-1 text-foreground/90">Name</label>
+            <label htmlFor="name" className="block text-sm font-medium mb-1 text-black/90">Name</label>
             <input
               type="text"
               id="name"
               name="name"
               value={formData.name}
               onChange={handleChange}
-              className="w-full px-4 py-2 rounded-md border border-border/50 bg-background/50 text-black focus:ring-2 focus:ring-primary focus:border-transparent placeholder:text-foreground/50"
+              className="w-full px-4 py-2 rounded-md border border-border/50 bg-background/50 text-black focus:ring-2 focus:ring-primary focus:border-transparent placeholder:text-black/50"
               required
             />
           </div>
           
           <div>
-            <label htmlFor="email" className="block text-sm font-medium mb-1 text-foreground/90">Email</label>
+            <label htmlFor="email" className="block text-sm font-medium mb-1 text-black/90">Email</label>
             <input
               type="email"
               id="email"
               name="email"
               value={formData.email}
               onChange={handleChange}
-              className="w-full px-4 py-2 rounded-md border border-border/50 bg-background/50 text-black focus:ring-2 focus:ring-primary focus:border-transparent placeholder:text-foreground/50"
+              className="w-full px-4 py-2 rounded-md border border-border/50 bg-background/50 text-black focus:ring-2 focus:ring-primary focus:border-transparent placeholder:text-black/50"
               required
             />
           </div>
           
           <div>
-            <label htmlFor="message" className="block text-sm font-medium mb-1 text-foreground/90">Message</label>
+            <label htmlFor="message" className="block text-sm font-medium mb-1 text-black/90">Message</label>
             <textarea
               id="message"
               name="message"
               rows={4}
               value={formData.message}
               onChange={handleChange}
-              className="w-full px-4 py-2 rounded-md border border-border/50 bg-background/50 text-black focus:ring-2 focus:ring-primary focus:border-transparent placeholder:text-foreground/50"
+              className="w-full px-4 py-2 rounded-md border border-border/50 bg-background/50 text-black focus:ring-2 focus:ring-primary focus:border-transparent placeholder:text-black/50"
               required
             />
           </div>
