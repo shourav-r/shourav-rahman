@@ -95,7 +95,7 @@ export default function ContactForm() {
   }
 
   return (
-    <div className="w-full contact-form">
+    <div className="w-full contact-form px-4 sm:px-6 py-8 sm:py-12">
       {/* Social Media Section */}
       <motion.div 
         className="max-w-2xl mx-auto text-center mb-8 sm:mb-12"
@@ -116,7 +116,7 @@ export default function ContactForm() {
           initial="initial"
           animate="animate"
         >
-          {socialLinks.map((social) => (
+          {socialLinks.filter(social => ["Instagram", "Facebook", "WhatsApp", "Messenger"].includes(social.name)).map((social) => (
             <motion.div
               key={social.name}
               initial="initial"
@@ -145,7 +145,7 @@ export default function ContactForm() {
       {/* Contact Form */}
       <motion.form 
         onSubmit={handleSubmit} 
-        className="max-w-2xl mx-auto w-full text-foreground"
+        className="max-w-2xl mx-auto w-full text-foreground bg-background/30 dark:bg-background/50 backdrop-blur-sm rounded-2xl p-6 sm:p-8 shadow-lg"
         variants={staggerContainer}
         initial="initial"
         animate="animate"
@@ -273,3 +273,4 @@ export default function ContactForm() {
     </div>
   )
 }
+
