@@ -145,7 +145,7 @@ export default function ContactForm() {
       {/* Contact Form */}
       <motion.form 
         onSubmit={handleSubmit} 
-        className="max-w-2xl mx-auto w-full text-foreground bg-background/95 dark:bg-background/95 rounded-2xl p-6 sm:p-8 shadow-lg border border-border/50"
+        className="max-w-2xl mx-auto w-full text-foreground bg-background/95 dark:bg-background/95 rounded-2xl p-6 sm:p-8 shadow-none"
         variants={staggerContainer}
         initial="initial"
         animate="animate"
