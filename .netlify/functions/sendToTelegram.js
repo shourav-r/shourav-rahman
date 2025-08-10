@@ -1,5 +1,3 @@
-const fetch = require('node-fetch')
-
 // Helper function to log errors to console
 const logError = (error, context = {}) => {
   const errorData = {
@@ -12,23 +10,32 @@ const logError = (error, context = {}) => {
   return errorData
 }
 
-// Timeout wrapper for fetch
-const fetchWithTimeout = async (url, options = {}, timeout = 5000) => {
-  const controller = new AbortController()
-  const id = setTimeout(() => controller.abort(), timeout)
+// Timeout wrapper for fetch using the built-in fetch
+const fetchWithTimeout = async (url, options = {}, timeout = 8000) => {
+  // Use the global fetch available in Netlify Functions
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), timeout);
   
   try {
     const response = await fetch(url, {
       ...options,
-      signal: controller.signal
-    })
-    clearTimeout(id)
-    return response
+      signal: controller.signal,
+      headers: {
+        'Content-Type': 'application/json',
+        ...(options.headers || {})
+      }
+    });
+    
+    clearTimeout(timeoutId);
+    return response;
   } catch (error) {
-    clearTimeout(id)
-    throw new Error(`Request timed out after ${timeout}ms: ${error.message}`)
+    clearTimeout(timeoutId);
+    if (error.name === 'AbortError') {
+      throw new Error(`Request timed out after ${timeout}ms`);
+    }
+    throw error;
   }
-}
+};
 
 exports.handler = async (event, context) => {
   console.log('=== New Request ===')
