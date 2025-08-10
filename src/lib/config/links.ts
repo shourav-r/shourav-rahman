@@ -24,6 +24,13 @@ export const navigationLinks = [
 
 export const socialLinks = [
   {
+    name: 'ArtStation',
+    href: 'https://baldcape7.artstation.com/',
+    icon: 'Palette',
+    gradient: 'from-blue-500 to-purple-600',
+    external: true
+  },
+  {
     name: 'Dribbble',
     href: 'https://dribbble.com/bald-cape',
     icon: 'Dribbble',
@@ -59,6 +66,13 @@ export const socialLinks = [
     external: true
   },
   {
+    name: 'Messenger',
+    href: 'https://m.me/therealbaldcape?hash=AbZb1DVn3BUxzVCC&source=qr_link_share',
+    icon: 'MessageCircle',
+    gradient: 'from-blue-400 to-blue-600',
+    external: true
+  },
+  {
     name: 'WhatsApp',
     href: 'https://wa.me/qr/D2ITBHLVB377A1',
     icon: 'MessageCircle',
@@ -67,7 +81,7 @@ export const socialLinks = [
   },
   {
     name: 'LinkedIn',
-    href: 'https://www.linkedin.com/in/shourav-rahman',
+    href: 'https://www.linkedin.com/in/shourav-rahman-3590ab271?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app',
     icon: 'LinkedIn',
     gradient: 'from-blue-600 to-blue-800',
     external: true
