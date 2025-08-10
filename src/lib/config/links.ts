@@ -26,7 +26,7 @@ export const socialLinks = [
   {
     name: 'ArtStation',
     href: 'https://baldcape7.artstation.com/',
-    icon: 'Palette',
+    icon: 'ArtStation',
     gradient: 'from-blue-500 to-purple-600',
     external: true
   },

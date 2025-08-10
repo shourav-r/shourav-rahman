@@ -26,7 +26,8 @@ import {
   FaTwitch,
   FaVimeo,
   FaSnapchat,
-  FaSkype
+  FaSkype,
+  FaArtstation
 } from 'react-icons/fa';
 
 interface SocialIconsProps {
@@ -61,7 +62,8 @@ const iconComponents = {
   'Twitch': FaTwitch,
   'Vimeo': FaVimeo,
   'Snapchat': FaSnapchat,
-  'Skype': FaSkype
+  'Skype': FaSkype,
+  'ArtStation': FaArtstation
 } as const;
 
 const brandColors = {
@@ -90,7 +92,8 @@ const brandColors = {
   'Twitch': '#9146FF',
   'Vimeo': '#1AB7EA',
   'Snapchat': '#FFFC00',
-  'Skype': '#00AFF0'
+  'Skype': '#00AFF0',
+  'ArtStation': '#13AFF0'
 } as const;
 
 export default function SocialIcons({ name, className, size = 24 }: SocialIconsProps) {
