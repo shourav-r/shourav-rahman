@@ -85,13 +85,6 @@ export const socialLinks = [
     icon: 'LinkedIn',
     gradient: 'from-blue-600 to-blue-800',
     external: true
-  },
-  {
-    name: 'Messenger',
-    href: 'https://m.me/roll0001',
-    icon: 'Messenger',
-    gradient: 'from-blue-500 to-purple-600',
-    external: true
   }
 ]
 

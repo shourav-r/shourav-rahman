@@ -8,9 +8,9 @@ export default function Footer() {
   return (
     <footer className="bg-background/60 backdrop-blur-lg border-t border-border/40 py-8">
       <div className="container mx-auto px-4">
-        <div className="flex flex-col items-center">
+        <div className="flex flex-col items-center w-full">
           {/* Social Icons */}
-          <div className="flex flex-wrap justify-center gap-6 mb-6">
+          <div className="flex flex-wrap justify-center gap-4 md:gap-6 mb-6 w-full max-w-2xl mx-auto px-4">
             {socialLinks.map((social) => (
               <Link
                 key={social.name}

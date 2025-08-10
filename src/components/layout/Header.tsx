@@ -80,7 +80,8 @@ export default function Header() {
                 .filter(social => 
                   social.name === 'Instagram' || 
                   social.name === 'Dribbble' || 
-                  social.name === 'Behance'
+                  social.name === 'Behance' ||
+                  social.name === 'ArtStation'
                 )
                 .map((social) => (
                   <Link
@@ -149,7 +150,8 @@ export default function Header() {
                       .filter(social => 
                         social.name === 'Instagram' || 
                         social.name === 'Dribbble' || 
-                        social.name === 'Behance'
+                        social.name === 'Behance' ||
+                        social.name === 'ArtStation'
                       )
                       .map((social) => (
                         <Link
