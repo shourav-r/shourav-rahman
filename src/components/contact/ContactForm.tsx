@@ -38,44 +38,71 @@ export default function ContactForm() {
     setErrorDetails(null)
 
     try {
+      // Basic validation
+      if (!formData.name || !formData.email || !formData.message) {
+        throw new Error('Please fill in all required fields')
+      }
+
+      // Email validation
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+      if (!emailRegex.test(formData.email)) {
+        throw new Error('Please enter a valid email address')
+      }
+
       const response = await fetch('/.netlify/functions/sendToTelegram', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
+        headers: { 
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+          name: formData.name.trim(),
+          email: formData.email.trim(),
+          message: formData.message.trim()
+        })
       })
       
-      let result
-      const contentType = response.headers.get('content-type')
-      
-      try {
-        // Only try to parse as JSON if the response is JSON
-        if (contentType && contentType.includes('application/json')) {
-          result = await response.json()
-        } else {
-          const text = await response.text()
-          console.error('Non-JSON response:', text)
-          throw new Error(`Server returned ${response.status}: ${text.substring(0, 100)}...`)
-        }
-      } catch (parseError) {
-        console.error('Error parsing response:', parseError)
-        throw new Error(`Invalid response from server (${response.status}). Please try again later.`)
-      }
-      
+      // Handle non-OK responses
       if (!response.ok) {
-        console.error('Server error:', result)
-        throw new Error(
-          result?.details || 
-          result?.error || 
-          `Server responded with status ${response.status}`
-        )
+        let errorMessage = `Server error: ${response.status}`
+        try {
+          const errorData = await response.json()
+          errorMessage = errorData.error || errorData.message || errorMessage
+          console.error('Server error details:', errorData)
+        } catch (parseError) {
+          const text = await response.text()
+          console.error('Non-JSON error response:', text)
+          errorMessage = `Error: ${text.substring(0, 200)}`
+        }
+        throw new Error(errorMessage)
+      }
+
+      // Parse successful response
+      const result = await response.json()
+      
+      if (!result.success) {
+        throw new Error(result.error || 'Failed to send message')
       }
       
       setSubmitStatus('success')
       setFormData({ name: '', email: '', message: '' })
     } catch (error) {
-      console.error('Error submitting form:', error)
+      console.error('Form submission error:', error)
       setSubmitStatus('error')
-      setErrorDetails(error instanceof Error ? error.message : 'Unknown error occurred')
+      
+      // User-friendly error messages
+      let errorMessage = 'Failed to send message. Please try again.'
+      if (error instanceof Error) {
+        if (error.message.includes('Failed to fetch')) {
+          errorMessage = 'Unable to connect to the server. Please check your internet connection.'
+        } else if (error.message.includes('timeout')) {
+          errorMessage = 'The request timed out. Please try again.'
+        } else {
+          errorMessage = error.message
+        }
+      }
+      
+      setErrorDetails(errorMessage)
     } finally {
       setIsSubmitting(false)
     }
