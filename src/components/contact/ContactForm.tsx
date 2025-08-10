@@ -44,13 +44,28 @@ export default function ContactForm() {
         body: JSON.stringify(formData)
       })
       
-      const result = await response.json()
+      let result
+      const contentType = response.headers.get('content-type')
+      
+      try {
+        // Only try to parse as JSON if the response is JSON
+        if (contentType && contentType.includes('application/json')) {
+          result = await response.json()
+        } else {
+          const text = await response.text()
+          console.error('Non-JSON response:', text)
+          throw new Error(`Server returned ${response.status}: ${text.substring(0, 100)}...`)
+        }
+      } catch (parseError) {
+        console.error('Error parsing response:', parseError)
+        throw new Error(`Invalid response from server (${response.status}). Please try again later.`)
+      }
       
       if (!response.ok) {
         console.error('Server error:', result)
         throw new Error(
-          result.details || 
-          result.error || 
+          result?.details || 
+          result?.error || 
           `Server responded with status ${response.status}`
         )
       }
