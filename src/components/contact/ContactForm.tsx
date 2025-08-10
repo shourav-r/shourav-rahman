@@ -29,10 +29,13 @@ export default function ContactForm() {
     }))
   }
 
+  const [errorDetails, setErrorDetails] = useState<string | null>(null)
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
     setSubmitStatus(null)
+    setErrorDetails(null)
 
     try {
       const response = await fetch('/.netlify/functions/sendToTelegram', {
@@ -44,7 +47,12 @@ export default function ContactForm() {
       const result = await response.json()
       
       if (!response.ok) {
-        throw new Error(result.error || 'Failed to send message')
+        console.error('Server error:', result)
+        throw new Error(
+          result.details || 
+          result.error || 
+          `Server responded with status ${response.status}`
+        )
       }
       
       setSubmitStatus('success')
@@ -52,6 +60,7 @@ export default function ContactForm() {
     } catch (error) {
       console.error('Error submitting form:', error)
       setSubmitStatus('error')
+      setErrorDetails(error instanceof Error ? error.message : 'Unknown error occurred')
     } finally {
       setIsSubmitting(false)
     }
@@ -149,14 +158,21 @@ export default function ContactForm() {
           </div>
           
           {submitStatus === 'success' && (
-            <p className="text-green-500 text-sm mt-2 text-center">
-              Message sent successfully!
-            </p>
+            <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-md mt-4">
+              <p className="font-medium">Message sent successfully!</p>
+              <p className="text-sm mt-1">I'll get back to you as soon as possible.</p>
+            </div>
           )}
           {submitStatus === 'error' && (
-            <p className="text-red-500 text-sm mt-2 text-center">
-              Failed to send message. Please try again.
-            </p>
+            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md mt-4">
+              <p className="font-medium">Failed to send message</p>
+              {errorDetails && (
+                <p className="text-sm mt-1 font-mono bg-red-100 p-2 rounded text-red-800 overflow-x-auto">
+                  {errorDetails}
+                </p>
+              )}
+              <p className="text-sm mt-2">Please try again or contact me directly through social media.</p>
+            </div>
           )}
         </div>
       </motion.form>
