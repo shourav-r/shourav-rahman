@@ -1,12 +1,11 @@
 export type ArtworkCategory = 
-  | 'Painting'
-  | 'Drawing'
-  | 'Mixed Media'
-  | 'Illustration'
-  | 'Watercolor'
-  | 'Animation'
+  | '3D'
   | 'Product Design'
-  | 'Video Editing'
+  | 'Drawing & Painting'
+  | 'Illustration'
+  | 'Character Design'
+  | 'Branding'
+  | 'Conceptual'
 
 export interface Artwork {
   id: string

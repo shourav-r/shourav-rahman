@@ -24,7 +24,7 @@ export interface GalleryItem {
   created_at: string
 }
 
-const categories = ['All', 'Painting', 'Drawing', 'Mixed media', 'Illustration', 'Watercolor', '3D', 'Product design']
+const categories = ['All', '3D', 'Product Design', 'Drawing & Painting', 'Illustration', 'Character Design', 'Branding', 'Conceptual']
 
 // Function to transform image URLs to the correct format
 const transformImageUrl = (url: string) => {
