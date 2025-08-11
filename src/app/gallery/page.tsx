@@ -10,7 +10,7 @@ function GalleryContent() {
 
 export default function GalleryPage() {
   return (
-    <div className="min-h-screen pt-24 px-4">
+    <div id="gallery-section" className="min-h-screen pt-24 px-4">
       <Suspense fallback={
         <div className="min-h-[50vh] flex items-center justify-center">
           <div className="animate-pulse text-foreground/60">Loading gallery...</div>

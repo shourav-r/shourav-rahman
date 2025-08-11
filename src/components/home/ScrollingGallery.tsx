@@ -59,12 +59,16 @@ export default function ScrollingGallery() {
         });
 
         // Create an array of category objects with their latest image and count
-        const categoryItems = Array.from(allCategories).map(category => ({
-          id: category.toLowerCase().replace(/\s+/g, '-'),
-          name: category,
-          imageUrl: categoryToLatestItem.get(category) || '',
-          count: categoryCounts.get(category) || 0
-        }));
+        const categoryItems = Array.from(allCategories).map((category, index) => {
+          // Generate a more unique ID by combining category name and index
+          const categoryId = `${category.toLowerCase().replace(/\s+/g, '-')}-${index}`;
+          return {
+            id: categoryId,
+            name: category,
+            imageUrl: categoryToLatestItem.get(category) || '',
+            count: categoryCounts.get(category) || 0
+          };
+        });
 
         setCategoryItems(categoryItems);
       } catch (error) {
@@ -119,7 +123,10 @@ export default function ScrollingGallery() {
   if (!isLoading && categoryItems.length === 0) {
     return (
       <GlassBackground className="w-full py-12 px-4 sm:px-8 text-center">
-        <p className="text-foreground/80">No categories found.</p>
+        <div className="max-w-3xl mx-auto">
+          <h2 className="text-2xl font-bold mb-4 text-foreground">No categories found</h2>
+          <p className="text-foreground/80">We couldn't find any gallery categories at the moment. Please check back later.</p>
+        </div>
       </GlassBackground>
     )
   }
@@ -142,9 +149,9 @@ export default function ScrollingGallery() {
             transition: isDragging ? 'none' : 'transform 0.5s ease-out'
           }}
         >
-          {categoryItems.map((category) => (
+          {categoryItems.map((category, index) => (
             <motion.div
-              key={category.id}
+              key={`${category.id}-${index}`}
               className="min-w-[220px] sm:min-w-[280px] relative group flex-shrink-0"
               whileHover={{ 
                 y: -8,

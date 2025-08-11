@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { useEffect, useState } from 'react'
 import { GlassBackground } from '../ui/GlassBackground'
@@ -24,55 +25,75 @@ const TypewriterText = ({ text, delay = 50 }: { text: string; delay?: number }) 
 }
 
 export default function Hero() {
+  const router = useRouter()
+
+  const scrollToGallery = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault()
+    
+    // Navigate to the gallery page first
+    router.push('/gallery')
+    
+    // Then scroll to the gallery section after a small delay to allow page load
+    setTimeout(() => {
+      const gallerySection = document.getElementById('gallery-section')
+      if (gallerySection) {
+        gallerySection.scrollIntoView({ behavior: 'smooth' })
+      }
+    }, 100) // Small delay to ensure the page has started loading
+  }
   return (
-    <section className="h-screen w-full flex items-center justify-center relative overflow-hidden p-4">
+    <section className="min-h-screen w-full relative overflow-hidden">
       {/* Background gradient */}
       <div className="absolute inset-0 bg-gradient-to-br from-background via-background/90 to-background/80" />
       
-      {/* Animated gradient overlay */}
-      <div className="absolute inset-0 opacity-30">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-primary/20 via-transparent to-transparent" />
-      </div>
+      {/* Full viewport glass effect */}
+      <GlassBackground className="fixed inset-0 -z-10">
+        <></>
+      </GlassBackground>
       
-      {/* Glass container */}
-      <GlassBackground className="max-w-4xl w-full mx-4 sm:mx-8">
-        <div className="py-16 sm:py-24 px-6 sm:px-12 text-center">
+      {/* Content container */}
+      <div className="absolute inset-0 flex items-center justify-center p-4">
+        <div className="w-full max-w-4xl text-center space-y-8 bg-background/30 backdrop-blur-sm rounded-3xl p-8 sm:p-12 lg:p-16 mx-auto">
           <motion.div
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
+            transition={{ duration: 0.8 }}
             className="space-y-8"
           >
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/80">
-              <TypewriterText text="Shourav Rahman" />
-            </h1>
+            <div className="space-y-6 w-full">
+              <div className="w-full">
+                <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/80 leading-tight mx-auto">
+                  <TypewriterText text="Shourav Rahman" />
+                </h1>
+              </div>
 
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.8, delay: 1.2 }}
-              className="text-lg sm:text-xl md:text-2xl font-normal space-y-3"
-            >
-              <p className="leading-tight text-foreground/90">What if art could do more than just exist?</p>
-              <p className="leading-tight text-foreground/80">I create visuals designed to act, persuade, and endure.</p>
-            </motion.div>
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.8, delay: 1.2 }}
+                className="text-lg sm:text-xl md:text-2xl font-normal space-y-4 w-full"
+              >
+                <p className="text-foreground/90 w-full">What if art could do more than just exist?</p>
+                <p className="text-foreground/80 w-full">I create visuals designed to act, persuade, and endure.</p>
+              </motion.div>
+            </div>
           </motion.div>
 
           <motion.div
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.8, delay: 1.8 }}
-            className="mt-12 flex flex-col sm:flex-row justify-center gap-4 sm:gap-6"
+            className="mt-12 flex flex-col sm:flex-row justify-center items-center gap-4 sm:gap-6"
           >
             <Button asChild size="lg" className="px-8 py-6 text-base sm:text-lg">
-              <Link href="/gallery">Explore My Work</Link>
+              <Link href="/gallery" onClick={scrollToGallery}>Explore My Work</Link>
             </Button>
             <Button asChild variant="outline" size="lg" className="px-8 py-6 text-base sm:text-lg">
               <Link href="/contact">Get in Touch</Link>
             </Button>
           </motion.div>
         </div>
-      </GlassBackground>
+      </div>
       
       {/* Decorative elements */}
       <div className="absolute bottom-8 left-1/2 -translate-x-1/2">
