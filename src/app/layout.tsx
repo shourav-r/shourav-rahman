@@ -15,10 +15,12 @@ export const viewport: Viewport = {
   maximumScale: 1,
   userScalable: false,
   viewportFit: 'cover',
+  // Force dark theme color
   themeColor: [
-    { media: '(prefers-color-scheme: light)', color: '#ffffff' },
-    { media: '(prefers-color-scheme: dark)', color: '#000000' },
+    { color: '#000000' },
   ],
+  // Force dark mode
+  colorScheme: 'dark',
 }
 
 export const metadata: Metadata = {

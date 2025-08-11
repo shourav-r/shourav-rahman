@@ -1,7 +1,6 @@
 'use client'
 
-import { ReactNode } from 'react'
-import { ThemeProvider } from 'next-themes'
+import { ReactNode, useEffect } from 'react'
 import ErrorBoundary from '@/components/ErrorBoundary'
 
 type AppProvidersProps = {
@@ -9,16 +8,16 @@ type AppProvidersProps = {
 }
 
 export default function AppProviders({ children }: AppProvidersProps) {
+  // Ensure dark theme is always applied
+  useEffect(() => {
+    document.documentElement.classList.add('dark')
+    document.documentElement.classList.remove('light')
+    document.documentElement.style.colorScheme = 'dark';
+  }, [])
+
   return (
     <ErrorBoundary>
-      <ThemeProvider
-        attribute="class"
-        defaultTheme="dark"
-        enableSystem={false}
-        disableTransitionOnChange
-      >
-        {children}
-      </ThemeProvider>
+      {children}
     </ErrorBoundary>
   )
 }
