@@ -115,20 +115,21 @@ exports.handler = async (event, context) => {
         const startTime = Date.now()
         try {
           const url = `https://api.telegram.org/bot${process.env.TELEGRAM_BOT_TOKEN}/sendMessage`
-          const body = JSON.stringify({
-            chat_id: chatId,
-            text: text,
-            parse_mode: 'HTML',
-            disable_web_page_preview: true
-          })
+          
+          // Use URLSearchParams to properly handle special characters and emojis
+          const formData = new URLSearchParams()
+          formData.append('chat_id', chatId)
+          formData.append('text', text)
+          formData.append('parse_mode', 'HTML')
+          formData.append('disable_web_page_preview', 'true')
           
           console.log(`Sending to chat ${chatId}...`)
           const response = await fetchWithTimeout(
             url,
             {
               method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: body
+              headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+              body: formData.toString()
             },
             8000 // 8 second timeout
           )
