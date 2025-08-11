@@ -127,13 +127,13 @@ export default function ContactForm() {
               href={social.href}
               target="_blank"
               rel="noopener noreferrer"
-              className="p-2 text-foreground/80 hover:text-primary transition-colors"
+              className="p-3 rounded-full bg-background/30 backdrop-blur-lg border border-border/50 hover:bg-background/50 transition-colors"
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}
               aria-label={social.name}
             >
-              <SocialIcons name={social.name} className="w-6 h-6" />
+              <SocialIcons name={social.name} className="w-6 h-6 text-foreground/90 hover:text-primary transition-colors" />
             </motion.a>
           ))}
         </div>

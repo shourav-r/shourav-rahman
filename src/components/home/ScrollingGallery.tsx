@@ -5,6 +5,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useRef, useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase/client'
+import { GlassBackground } from '../ui/GlassBackground'
 
 interface CategoryItem {
   id: string
@@ -101,30 +102,30 @@ export default function ScrollingGallery() {
   // If no items are loaded yet, show loading state
   if (isLoading) {
     return (
-      <div className="relative w-full overflow-hidden py-8">
-        <div className="flex gap-4">
+      <GlassBackground className="w-full py-12 px-4 sm:px-8">
+        <div className="flex gap-4 overflow-hidden">
           {[1, 2, 3].map((item) => (
             <div
               key={item}
-              className="min-w-[200px] h-[300px] bg-secondary/50 animate-pulse rounded-xl"
+              className="min-w-[200px] h-[300px] bg-background/30 backdrop-blur-sm rounded-xl border border-border/30 animate-pulse"
             />
           ))}
         </div>
-      </div>
+      </GlassBackground>
     )
   }
 
   // If no items are found after loading
   if (!isLoading && categoryItems.length === 0) {
     return (
-      <div className="w-full py-8 text-center text-muted-foreground">
-        No categories found.
-      </div>
+      <GlassBackground className="w-full py-12 px-4 sm:px-8 text-center">
+        <p className="text-foreground/80">No categories found.</p>
+      </GlassBackground>
     )
   }
 
   return (
-    <div className="relative w-full overflow-hidden py-8">
+    <GlassBackground className="w-full py-12 px-4 sm:px-8">
       <motion.div
         ref={carousel}
         className="cursor-grab"
@@ -135,7 +136,7 @@ export default function ScrollingGallery() {
           dragConstraints={{ right: 0, left: -width }}
           onDragStart={() => setIsDragging(true)}
           onDragEnd={handleDragEnd}
-          className="flex gap-4 px-4"
+          className="flex gap-6 py-2"
           style={{
             x: isDragging ? undefined : 0,
             transition: isDragging ? 'none' : 'transform 0.5s ease-out'
@@ -144,22 +145,32 @@ export default function ScrollingGallery() {
           {categoryItems.map((category) => (
             <motion.div
               key={category.id}
-              className="min-w-[200px] sm:min-w-[250px] relative group flex-shrink-0"
-              whileHover={{ scale: 1.03 }}
-              transition={{ duration: 0.2 }}
+              className="min-w-[220px] sm:min-w-[280px] relative group flex-shrink-0"
+              whileHover={{ 
+                y: -8,
+                transition: { duration: 0.3, ease: [0.2, 0, 0, 1] }
+              }}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ 
+                opacity: 1, 
+                y: 0,
+                transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] }
+              }}
+              viewport={{ once: true, margin: "-20%" }}
             >
               <Link 
                 href={`/gallery?category=${encodeURIComponent(category.name)}`}
-                className="block relative aspect-[3/4] w-full overflow-hidden rounded-xl cursor-pointer border border-border/50 hover:border-primary/50 transition-all duration-300"
+                className="block relative aspect-[3/4] w-full overflow-hidden rounded-2xl cursor-pointer group"
               >
-                <div className="relative w-full h-full">
+                <div className="absolute inset-0 bg-background/20 backdrop-blur-sm rounded-2xl -m-0.5 group-hover:bg-background/30 transition-all duration-300 z-0" />
+                <div className="relative w-full h-full z-10">
                   {category.imageUrl ? (
                     <Image
                       src={category.imageUrl}
                       alt={category.name}
                       fill
-                      className="object-cover"
-                      sizes="(max-width: 640px) 200px, 250px"
+                      className="object-cover transition-transform duration-500 group-hover:scale-105"
+                      sizes="(max-width: 640px) 220px, 280px"
                       onError={(e) => {
                         console.error('Error loading image:', category.imageUrl);
                         const target = e.target as HTMLImageElement;
@@ -167,25 +178,45 @@ export default function ScrollingGallery() {
                       }}
                     />
                   ) : (
-                    <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-secondary/20 flex items-center justify-center">
-                      <span className="text-4xl font-bold text-primary/50">
+                    <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-secondary/20 flex items-center justify-center rounded-2xl">
+                      <span className="text-5xl font-bold text-foreground/40">
                         {category.name.charAt(0).toUpperCase()}
                       </span>
                     </div>
                   )}
                 </div>
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex flex-col justify-end p-4">
-                  <h3 className="text-white text-xl font-bold capitalize">{category.name}</h3>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent flex flex-col justify-end p-6 rounded-2xl">
+                  <div className="flex flex-col items-start">
+                    <h3 className="text-white text-2xl font-bold capitalize mb-1">{category.name}</h3>
+                    <span className="text-white/70 text-sm">{category.count} {category.count === 1 ? 'work' : 'works'}</span>
+                  </div>
                 </div>
+                <div className="absolute inset-0 border border-white/10 rounded-2xl group-hover:border-white/20 transition-colors duration-300 pointer-events-none" />
               </Link>
             </motion.div>
           ))}
         </motion.div>
       </motion.div>
       
-      {/* Gradient overlays to indicate more content */}
-      <div className="absolute left-0 top-0 bottom-0 w-20 bg-gradient-to-r from-background to-transparent pointer-events-none" />
-      <div className="absolute right-0 top-0 bottom-0 w-20 bg-gradient-to-l from-background to-transparent pointer-events-none" />
-    </div>
+      {/* Scroll indicator */}
+      <div className="mt-8 text-center">
+        <div className="inline-flex items-center gap-2 text-sm text-foreground/60">
+          <span>Scroll to explore</span>
+          <svg 
+            width="16" 
+            height="16" 
+            viewBox="0 0 24 24" 
+            fill="none" 
+            stroke="currentColor" 
+            strokeWidth="2" 
+            strokeLinecap="round" 
+            strokeLinejoin="round"
+            className="animate-bounce"
+          >
+            <path d="M12 5v14M19 12l-7 7-7-7" />
+          </svg>
+        </div>
+      </div>
+    </GlassBackground>
   )
 }
